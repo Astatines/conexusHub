@@ -6,7 +6,7 @@ import { useMotionTemplate, useMotionValue, motion } from 'framer-motion';
 
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
-  type?: 'text' | 'password' | 'email' | 'number' | 'search' | 'file';
+  type?: 'text' | 'password' | 'email' | 'number' | 'search' | 'file' | 'date';
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(

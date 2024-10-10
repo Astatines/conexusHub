@@ -114,7 +114,7 @@ const CollisionMechanism = React.forwardRef<
       repeatDelay?: number;
     };
   }
->(({ parentRef, containerRef, beamOptions = {} }) => {
+>(({ parentRef, containerRef, beamOptions = {} }, ref) => {
   const beamRef = useRef<HTMLDivElement>(null);
   const [collision, setCollision] = useState<{
     detected: boolean;
@@ -123,6 +123,7 @@ const CollisionMechanism = React.forwardRef<
     detected: false,
     coordinates: null,
   });
+
   const [beamKey, setBeamKey] = useState(0);
   const [cycleCollisionDetected, setCycleCollisionDetected] = useState(false);
 
@@ -150,26 +151,29 @@ const CollisionMechanism = React.forwardRef<
               y: relativeY,
             },
           });
+          console.log(ref);
           setCycleCollisionDetected(true);
         }
       }
     };
 
     const animationInterval = setInterval(checkCollision, 50);
-
     return () => clearInterval(animationInterval);
   }, [cycleCollisionDetected, containerRef, parentRef]);
 
   useEffect(() => {
     if (collision.detected && collision.coordinates) {
-      setTimeout(() => {
+      const resetCollision = () => {
         setCollision({ detected: false, coordinates: null });
         setCycleCollisionDetected(false);
-      }, 2000);
+      };
 
-      setTimeout(() => {
-        setBeamKey((prevKey) => prevKey + 1);
-      }, 2000);
+      const handleTimeouts = () => {
+        setTimeout(resetCollision, 2000);
+        setTimeout(() => setBeamKey((prevKey) => prevKey + 1), 2000);
+      };
+
+      handleTimeouts();
     }
   }, [collision]);
 

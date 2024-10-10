@@ -1,18 +1,125 @@
-'use client';
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Label } from '../ui/label';
 import { Input } from '../ui/input';
 import { cn } from '../../lib/utils';
 import GetStartedButton from '../ui/get-started-button';
+import axios from 'axios';
+import MovingGradient from '../ui/moving-gradient';
+import { BadgeAlert } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+
+const BACKEND_URL = 'http://localhost:3000';
 
 const MarketR = () => {
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log('Form submitted');
+  const [shopName, setShopName] = useState('');
+  const [estd, setEstd] = useState('');
+  const [location, setLocation] = useState('');
+  const [shopImageURL, setShopImageURL] = useState<File | null>(null);
+  const [productName, setProductName] = useState('');
+  const [category, setCategory] = useState('');
+  const [quantity, setQuantity] = useState('');
+  const [price, setPrice] = useState('');
+  const [unit, setUnit] = useState('');
+  const [productImageURL, setProductImageURL] = useState<File | null>(null);
+  const shopImageRef = useRef<HTMLInputElement | null>(null);
+  const productImageRef = useRef<HTMLInputElement | null>(null);
+  const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth', // For smooth scrolling
+    });
   };
 
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (
+      // !shopName ||
+      // !productName ||
+      // !category ||
+      // !quantity ||
+      // !price ||
+      // !unit ||
+      !shopImageURL ||
+      !productImageURL
+    ) {
+      alert('Please fill all the fields');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('shopName', shopName);
+    formData.append('estd', estd);
+    formData.append('location', location);
+    formData.append('shopImageURL', shopImageURL);
+    formData.append('productName', productName);
+    formData.append('category', category);
+    formData.append('quantity', quantity);
+    formData.append('price', price);
+    formData.append('unit', unit);
+    formData.append('productImageURL', productImageURL);
+
+    const resetForm = () => {
+      setShopName('');
+      setEstd('');
+      setLocation('');
+      setShopImageURL(null);
+      setProductName('');
+      setCategory('');
+      setQuantity('');
+      setPrice('');
+      setUnit('');
+      setProductImageURL(null);
+      //file input value reset
+      if (shopImageRef.current) shopImageRef.current.value = '';
+      if (productImageRef.current) productImageRef.current.value = '';
+    };
+
+    try {
+      const response = await axios.post(`${BACKEND_URL}/api/shop`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      setMessage(response.data);
+      setLoading(true);
+      resetForm();
+      scrollToTop();
+    } catch (err) {
+      console.error(err);
+      setMessage('Failed to register your marketplace. Please try again.');
+      setLoading(true);
+    }
+  };
+
+  useEffect(() => {
+    if (loading) {
+      setTimeout(() => {
+        setLoading(false);
+        navigate('/marketplace');
+      }, 5000);
+    }
+  }, [loading, navigate]);
+
   return (
-    <div className='min-h-screen p-10 bg-black text-purple-500 flex items-center'>
+    <div className='min-h-screen p-10 pt-4 bg-black text-purple-500 flex items-center flex-col'>
+      {loading ? (
+        <MovingGradient className='rounded-xl shadow-md mb-4 slide fixed right-[32%] top-1/2 '>
+          <div className='w-64 p-4 flex items-center flex-col '>
+            <h4 className='text-md mb-2 flex flex-row items-center  gap-2 font-bold text-purple-500'>
+              <span>Conexus Alert!</span>
+              <BadgeAlert />
+            </h4>
+            <p className='break-words text-sm text-black/80 text-center'>
+              {message}
+            </p>
+          </div>
+        </MovingGradient>
+      ) : null}
+
       <div className='max-w-lg w-full mx-auto md:rounded-2xl p-6 md:p-8 shadow-input bg-zinc-900 rounded-xl'>
         <h2 className='font-bold text-2xl text-purple-500 dark:text-neutral-200 mb-4'>
           Register Your Marketplace
@@ -35,6 +142,8 @@ const MarketR = () => {
                 <Label htmlFor='shopName'>Marketplace Name</Label>
                 <Input
                   id='shopName'
+                  value={shopName}
+                  onChange={(e) => setShopName(e.target.value)}
                   name='shopName'
                   placeholder='What do you call your marketplace?'
                   type='text'
@@ -45,8 +154,10 @@ const MarketR = () => {
                 <Input
                   id='estd'
                   name='estd'
+                  value={estd}
+                  onChange={(e) => setEstd(e.target.value)}
                   placeholder='When was your marketplace established?'
-                  type='text'
+                  type='date'
                 />
               </LabelInputContainer>
               <LabelInputContainer>
@@ -54,13 +165,23 @@ const MarketR = () => {
                 <Input
                   id='location'
                   name='location'
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
                   placeholder='Where is your marketplace located?'
                   type='text'
                 />
               </LabelInputContainer>
               <LabelInputContainer>
                 <Label htmlFor='shopImageURL'>Representative Image</Label>
-                <Input id='shopImageURL' name='shopImageURL' type='file' />
+                <Input
+                  id='shopImageURL'
+                  ref={shopImageRef}
+                  name='shopImageURL'
+                  onChange={(e) => {
+                    setShopImageURL(e.target.files ? e.target.files[0] : null);
+                  }}
+                  type='file'
+                />
               </LabelInputContainer>
             </div>
           </section>
@@ -78,6 +199,8 @@ const MarketR = () => {
                 <Input
                   id='productName'
                   name='productName'
+                  value={productName}
+                  onChange={(e) => setProductName(e.target.value)}
                   placeholder='Name of your product'
                   type='text'
                 />
@@ -87,6 +210,8 @@ const MarketR = () => {
                 <Input
                   id='category'
                   name='category'
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
                   placeholder='Product category'
                   type='text'
                 />
@@ -96,6 +221,8 @@ const MarketR = () => {
                 <Input
                   id='quantity'
                   name='quantity'
+                  value={quantity}
+                  onChange={(e) => setQuantity(e.target.value)}
                   placeholder='Available quantity'
                   type='number'
                 />
@@ -105,6 +232,8 @@ const MarketR = () => {
                 <Input
                   id='price'
                   name='price'
+                  value={price}
+                  onChange={(e) => setPrice(e.target.value)}
                   placeholder='Rs. 0.00'
                   type='number'
                 />
@@ -114,6 +243,8 @@ const MarketR = () => {
                 <Input
                   id='unit'
                   name='unit'
+                  value={unit}
+                  onChange={(e) => setUnit(e.target.value)}
                   placeholder='Kg, Litre, etc.'
                   type='text'
                 />
@@ -122,8 +253,12 @@ const MarketR = () => {
                 <Label htmlFor='productImageURL'>Product Image</Label>
                 <Input
                   id='productImageURL'
+                  ref={productImageRef}
+                  onChange={(e) =>
+                    setProductImageURL(e.target.files?.[0] || null)
+                  } // Only one onChange handler
                   name='productImageURL'
-                  type='file'
+                  type='file' // Removed value prop
                 />
               </LabelInputContainer>
             </div>
