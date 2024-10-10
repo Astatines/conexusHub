@@ -4,7 +4,7 @@ import { IProduct } from './productModel';
 
 // Define the Shop interface extending Document from mongoose
 export interface IShop extends Document {
-  name: string;
+  shopName: string;
   estd: Date; // Establishment date
   owner: IUser['_id']; // Reference to the user who owns the shop
   location: string; // Location of the shop
@@ -14,7 +14,7 @@ export interface IShop extends Document {
 
 // Create the Shop Schema with the required fields
 const ShopSchema: Schema<IShop> = new Schema({
-  name: {
+  shopName: {
     type: String,
     required: true, // Mark as required
   },
