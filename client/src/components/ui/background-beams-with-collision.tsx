@@ -96,7 +96,6 @@ export const BackgroundBeamsWithCollision = ({
     </div>
   );
 };
-
 const CollisionMechanism = React.forwardRef<
   HTMLDivElement,
   {
@@ -151,7 +150,6 @@ const CollisionMechanism = React.forwardRef<
               y: relativeY,
             },
           });
-          console.log(ref);
           setCycleCollisionDetected(true);
         }
       }
@@ -180,8 +178,12 @@ const CollisionMechanism = React.forwardRef<
   return (
     <>
       <motion.div
+        ref={(el) => {
+          // Maintain reference
+          if (ref)
+            (ref as React.MutableRefObject<HTMLDivElement | null>).current = el; // Forward ref
+        }}
         key={beamKey}
-        ref={beamRef}
         animate='animate'
         initial={{
           translateY: beamOptions.initialY || '-200px',

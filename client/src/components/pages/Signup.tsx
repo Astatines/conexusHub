@@ -7,6 +7,7 @@ import axios from 'axios';
 import MovingGradient from '../ui/moving-gradient';
 import { BadgeAlert } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import Authorization from '../Authorization';
 
 const BACKEND_URL = 'http://localhost:3000';
 
@@ -96,13 +97,14 @@ const Signup = () => {
           headers: { 'Content-Type': 'multipart/form-data' },
         }
       );
-      setMessage(response.data);
+      console.log(response.data);
+      setMessage(response.data.message);
       setSuccess(true);
       resetForm();
       scrollToTop();
     } catch (err) {
       console.error(err);
-      setMessage('Failed to register your marketplace. Please try again.');
+      setMessage('Failed to Signup');
       setError(true);
       scrollToTop();
     }
@@ -124,6 +126,7 @@ const Signup = () => {
 
   return (
     <div className='min-h-screen p-10 pt-4 bg-black text-purple-500 flex items-center flex-col'>
+      <Authorization />
       {success || error ? (
         <MovingGradient className='rounded-xl shadow-md mb-4 shake'>
           <div className='w-64 p-4 flex items-center flex-col '>
@@ -217,7 +220,7 @@ const Signup = () => {
                   name='number'
                   value={number}
                   onChange={(e) => setNumber(e.target.value)}
-                  placeholder='Name of your product'
+                  placeholder='Your contact number'
                   type='number'
                 />
               </LabelInputContainer>

@@ -1,5 +1,11 @@
+import Authorization from '../Authorization';
+
 const Marketplace = () => {
-  return <div>Marketplace</div>;
+  return (
+    <div>
+      <Authorization />
+    </div>
+  );
 };
 
 export default Marketplace;

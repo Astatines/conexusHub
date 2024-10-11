@@ -7,12 +7,17 @@ import axios from 'axios';
 import MovingGradient from '../ui/moving-gradient';
 import { BadgeAlert } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import Authorization from '../Authorization';
+import { setUser } from '../../redux/authSlice';
 
 const BACKEND_URL = 'http://localhost:3000';
 
 const Login = () => {
   const navigate = useNavigate();
   //login information
+
+  const dispatch = useDispatch();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -51,9 +56,17 @@ const Login = () => {
     try {
       const response = await axios.post(
         `${BACKEND_URL}/api/user/login`,
-        formData
+        formData,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
       );
-      setMessage(response.data);
+      console.log(response.data);
+      setMessage(response.data.message);
+      console.log(response.data.user);
+      dispatch(setUser(response.data.user));
       setSuccess(true);
       resetForm();
       scrollToTop();
@@ -69,7 +82,7 @@ const Login = () => {
     if (success) {
       setTimeout(() => {
         setSuccess(false);
-        navigate('/login');
+        navigate('/hub');
       }, 2000);
     }
     if (error) {
@@ -81,6 +94,7 @@ const Login = () => {
 
   return (
     <div className='min-h-screen p-10 pt-4 bg-black text-purple-500 flex items-center flex-col justify-center'>
+      <Authorization />
       {success || error ? (
         <MovingGradient className='rounded-xl shadow-md mb-4 shake'>
           <div className='w-64 p-4 flex items-center flex-col '>

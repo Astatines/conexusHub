@@ -30,6 +30,15 @@ module.exports = {
           '100%': { backgroundPosition: '100% 50%' },
         },
       },
+      keyframes: {
+        trail: {
+          '0%': { '--angle': '0deg' },
+          '100%': { '--angle': '360deg' },
+        },
+      },
+      animation: {
+        trail: 'trail var(--duration) linear infinite',
+      },
     },
   },
   plugins: [addVariablesForColors],
