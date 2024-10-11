@@ -4,21 +4,21 @@ import { IProduct } from './productModel';
 
 // Define the User interface extending Document from mongoose
 export interface IUser extends Document {
-  name: string;
+  userName?: string;
   email: string;
   password: string;
-  imageURL: string;
-  number: number;
-  address: string;
-  role: string;
-  shops: IShop['_id'][]; // Changed to an array to store multiple shops
-  cart: IProduct['_id'][]; // Changed to an array to store multiple products
+  userImageURL?: string;
+  number?: number;
+  address?: string;
+  role?: string;
+  shops?: IShop['_id'][]; // Changed to an array to store multiple shops
+  cart?: IProduct['_id'][]; // Changed to an array to store multiple products
 }
 
 // Create the User Schema with the required fields
 const UserSchema: Schema<IUser> = new Schema(
   {
-    name: {
+    userName: {
       type: String,
       required: true,
     },
@@ -31,7 +31,7 @@ const UserSchema: Schema<IUser> = new Schema(
       type: String,
       required: true,
     },
-    imageURL: {
+    userImageURL: {
       type: String,
       default: '/default.png', // Default image URL
     },

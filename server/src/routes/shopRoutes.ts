@@ -2,10 +2,11 @@ import express, { Request, Response, NextFunction } from 'express';
 import multer, { FileFilterCallback } from 'multer';
 import path from 'path';
 import fs from 'fs';
+import { authenticateToken } from '../middlewares/auth';
 
 const router = express.Router();
 
-const uploadsDir = './uploads/';
+const uploadsDir = './uploads/shops';
 if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir);
 }
@@ -15,7 +16,7 @@ const storage = multer.diskStorage({
   filename: (req, file, cb) => {
     cb(
       null,
-      file.fieldname + '-' + Date.now() + path.extname(file.originalname)
+      req.body.shopName + '-' + Date.now() + path.extname(file.originalname)
     );
   },
 });
@@ -42,8 +43,14 @@ const upload = multer({
   },
 });
 
+router.get('/register', async (req: Request, res: Response) => {
+  res.status(200).send({
+    message: 'hi',
+  });
+});
+
 router.post(
-  '/',
+  '/register',
   upload.fields([
     {
       name: 'shopImageURL',
@@ -54,8 +61,7 @@ router.post(
       maxCount: 1,
     },
   ]),
-
-  async (req: Request, res: Response) => {
+  async (req, res) => {
     console.log(req.body, req.files);
     res
       .status(200)
