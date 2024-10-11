@@ -6,43 +6,24 @@
   font-family: 'Inter', sans-serif;
 }
 
-@keyframes explode {
+@keyframes shake {
   0% {
-    transform: scale(1);
-    opacity: 0;
-    background-color: rgba(255, 0, 0, 1); /* Start with red */
+    transform: translateX(0);
   }
-  30% {
-    transform: scale(1.5);
-    background-color: rgba(255, 165, 0, 1); /* Orange */
+  25% {
+    transform: translateX(-5px);
   }
   50% {
-    transform: scale(2);
-    opacity: 1;
-    background-color: rgba(255, 255, 0, 1); /* Yellow */
+    transform: translateX(5px);
   }
-  60% {
-    transform: scale(3);
-    opacity: 0.8;
-    background-color: rgba(0, 255, 0, 1); /* Green */
-  }
-  90% {
-    transform: scale(4);
-    opacity: 0.5;
-    background-color: rgba(0, 0, 255, 1); /* Blue */
+  75% {
+    transform: translateX(-5px);
   }
   100% {
-    transform: scale(0);
-    opacity: 0;
-    background-color: rgba(255, 0, 255, 1); /* Pink */
+    transform: translateX(0);
   }
 }
 
-.explode {
-  animation: explode 3s ease forwards; /* Adjust duration as needed */
-}
-
-
-.slide {
-  animation: explode 5s ease-in-out infinite; /* Loop the animation */
+.shake {
+  animation: shake 1s 0.5s;
 }

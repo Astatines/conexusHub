@@ -24,7 +24,8 @@ const MarketR = () => {
   const shopImageRef = useRef<HTMLInputElement | null>(null);
   const productImageRef = useRef<HTMLInputElement | null>(null);
   const [message, setMessage] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState(false);
 
   const navigate = useNavigate();
 
@@ -39,16 +40,18 @@ const MarketR = () => {
     e.preventDefault();
 
     if (
-      // !shopName ||
-      // !productName ||
-      // !category ||
-      // !quantity ||
-      // !price ||
-      // !unit ||
+      !shopName ||
+      !productName ||
+      !category ||
+      !quantity ||
+      !price ||
+      !unit ||
       !shopImageURL ||
       !productImageURL
     ) {
-      alert('Please fill all the fields');
+      setMessage('Please fill all the fields');
+      setError(true);
+      scrollToTop();
       return;
     }
 
@@ -81,35 +84,41 @@ const MarketR = () => {
     };
 
     try {
-      const response = await axios.post(`${BACKEND_URL}/api/shop`, formData, {
+      const response = await axios.post(`${BACKEND_URL}/api/shop/register`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       setMessage(response.data);
-      setLoading(true);
+      setSuccess(true);
       resetForm();
       scrollToTop();
     } catch (err) {
       console.error(err);
       setMessage('Failed to register your marketplace. Please try again.');
-      setLoading(true);
+      setError(true);
+      scrollToTop();
     }
   };
 
   useEffect(() => {
-    if (loading) {
+    if (success) {
       setTimeout(() => {
-        setLoading(false);
+        setSuccess(false);
         navigate('/marketplace');
-      }, 5000);
+      }, 2000);
     }
-  }, [loading, navigate]);
+    if (error) {
+      setTimeout(() => {
+        setError(false);
+      }, 2000);
+    }
+  }, [error, success, navigate]);
 
   return (
-    <div className='min-h-screen p-10 pt-4 bg-black text-purple-500 flex items-center flex-col'>
-      {loading ? (
-        <MovingGradient className='rounded-xl shadow-md mb-4 slide fixed right-[32%] top-1/2 '>
-          <div className='w-64 p-4 flex items-center flex-col '>
-            <h4 className='text-md mb-2 flex flex-row items-center  gap-2 font-bold text-purple-500'>
+    <div className='min-h-screen p-10 pt-4 bg-black text-purple-500 flex items-center relative flex-col'>
+      {success || error ? (
+        <MovingGradient className='rounded-xl shadow-md mb-4 shake '>
+          <div className='w-64 p-4 flex items-center flex-col'>
+            <h4 className='text-md mb-2 flex flex-row items-center gap-2 font-bold text-purple-500'>
               <span>Conexus Alert!</span>
               <BadgeAlert />
             </h4>
