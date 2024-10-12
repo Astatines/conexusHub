@@ -12,16 +12,10 @@ import Authorization from '../Authorization';
 const BACKEND_URL = 'http://localhost:3000';
 
 const MarketR = () => {
-  const [pageLoad, setPageLoad] = useState(true);
   useEffect(() => {
-    axios
-      .get(`${BACKEND_URL}/api/shop/register`)
-      .then((res) => {
-        console.log(res.data);
-      })
-      .then(() => {
-        setPageLoad(false);
-      });
+    axios.get(`${BACKEND_URL}/api/shop/register`).then((res) => {
+      console.log(res.data.message);
+    });
   }, []);
 
   const [shopName, setShopName] = useState('');
@@ -110,7 +104,7 @@ const MarketR = () => {
       scrollToTop();
     } catch (err) {
       console.error(err);
-      setMessage('Failed to register your marketplace. Please try again.');
+      setMessage('Registration Failed! Please try again');
       setError(true);
       scrollToTop();
     }
@@ -129,10 +123,6 @@ const MarketR = () => {
       }, 2000);
     }
   }, [error, success, navigate]);
-
-  if (pageLoad) {
-    return <div>Loading...</div>;
-  }
 
   return (
     <div className='min-h-screen p-10 pt-4 bg-black text-purple-500 flex items-center relative flex-col'>

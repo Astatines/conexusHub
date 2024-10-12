@@ -6,6 +6,9 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { IUser } from '../models/userModel';
 import userModel from '../models/userModel';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const router = express.Router();
 
@@ -121,15 +124,22 @@ router.post(
     console.log(isMatch);
 
     // Create a JWT token
-    const token = jwt.sign({ id: user._id, email: user.email }, 'secret', {
-      expiresIn: '1h',
-    });
+    const token = jwt.sign(
+      { id: user._id, email: user.email },
+      process.env.JWT_SECRET as string,
+      {
+        expiresIn: '1h',
+      }
+    );
 
     console.log(token);
-    res.cookie('token', token);
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+    });
+
     res.status(200).send({
       message: 'Login Successful! Conexus is now open to you!',
-
       user: user,
     });
   })

@@ -1,42 +1,47 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { IUser } from '../models/userModel';
+import userModel from '../models/userModel';
+import dotenv from 'dotenv';
 
-// Extend the Request interface to include the user object
-export interface AuthenticatedRequest extends Request {
-  user?: string | object;
-}
+dotenv.config();
 
-const authenticateToken = (
-  req: AuthenticatedRequest,
+const authenticateToken = async (
+  req: Request | any,
   res: Response,
   next: NextFunction
-) => {
-  const token = req.header('Authorization')?.split(' ')[1];
-
-  // If token is not present, return access denied error
-  if (!token) {
-    return res.status(403).json({
-      error: 'Access Denied',
-    });
-  }
-
+): Promise<void> => {
   try {
-    // Verify and decode the token
-    const decoded = jwt.verify(token, 'secret');
+    const { authorization } = req.headers;
+    if (!authorization) {
+      res.status(404).send({
+        message: 'You are not authorized yet.',
+      });
+    }
+    const accessToken = authorization.split(' ')[1];
+    const payload = await jwt.verify(
+      accessToken,
+      process.env.JWT_SECRET as string
+    );
+    const { id } = payload as any;
 
-    // Ensure the decoded token is an object before assigning it to req.user
-    if (typeof decoded === 'object' && decoded !== null) {
-      req.user = decoded; // Type assertion to IUser
-      console.log(req.user);
+    if (!id) {
+      res.send('Invalid token provided');
     }
 
-    next(); // Proceed to the next middleware/route handler
+    const user = await userModel.findById(id);
+    if (!user) {
+      res.send('User not registered on database.');
+    }
+    req.user(user);
+    next();
   } catch (error) {
-    return res.status(403).json({
-      error: 'Invalid token',
-    });
+    if (error === 'TokenExpiredError') {
+      req.send({
+        message: 'Token has expired!',
+      });
+    }
+    res.status(500).send('Server Error');
   }
 };
 
-export { authenticateToken };
+export default authenticateToken;

@@ -2,7 +2,7 @@ import express, { Request, Response, NextFunction } from 'express';
 import multer, { FileFilterCallback } from 'multer';
 import path from 'path';
 import fs from 'fs';
-import { authenticateToken } from '../middlewares/auth';
+import authenticateToken from '../middlewares/auth';
 
 const router = express.Router();
 
@@ -43,14 +43,19 @@ const upload = multer({
   },
 });
 
-router.get('/register', async (req: Request, res: Response) => {
-  res.status(200).send({
-    message: 'hi',
-  });
-});
+router.get(
+  '/register',
+
+  async (req: Request, res: Response) => {
+    res.status(200).send({
+      message: 'Hi from /api/register',
+    });
+  }
+);
 
 router.post(
   '/register',
+  authenticateToken,
   upload.fields([
     {
       name: 'shopImageURL',

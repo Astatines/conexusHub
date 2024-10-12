@@ -1,5 +1,5 @@
 // In index.ts
-import express from 'express';
+import express, { NextFunction } from 'express';
 import cors from 'cors';
 import shopRoutes from './routes/shopRoutes'; // Use import instead of require
 import userRoutes from './routes/userRoutes';
@@ -8,6 +8,8 @@ import { body } from 'express-validator';
 import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
+import authenticateToken from './middlewares/auth';
+import { Request, Response } from 'express';
 
 dotenv.config();
 
@@ -16,8 +18,8 @@ app.use(cors()); // Enable CORS for all routes
 app.use(bodyParser.json());
 app.use(cookieParser());
 
-app.get('/', (req, res) => {
-  res.send('Hello, World!');
+app.get('/', async (req: Request, res: Response) => {
+  res.send('helloworld');
 });
 
 //connect to database
