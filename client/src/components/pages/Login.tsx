@@ -64,9 +64,7 @@ const Login = () => {
           },
         }
       );
-      console.log(response.data);
       setMessage(response.data.message);
-      console.log(response.data.user);
       dispatch(setUser(response.data.user));
       setSuccess(true);
       resetForm();
