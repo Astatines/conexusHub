@@ -8,6 +8,7 @@ import MovingGradient from '../ui/moving-gradient';
 import { BadgeAlert } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Authorization from '../Authorization';
+import { Link } from 'react-router-dom';
 
 const BACKEND_URL = 'http://localhost:3000';
 
@@ -254,6 +255,19 @@ const Signup = () => {
           <div className='relative w-full'>
             <GetStartedButton text={'Signup'} className='w-full absolute' />
           </div>
+          <Link to='/login'>
+            <div className='text-center mt-4 text-sm text-purple-500 dark:text-neutral-200'>
+              <p>
+                New to Conexus? Well that's great,{' '}
+                <span
+                  className='dark:text-neutral-200 cursor-pointer text-white underline'
+                  onClick={() => navigate('/register')}
+                >
+                  Register
+                </span>
+              </p>
+            </div>
+          </Link>
         </form>
       </div>
     </div>

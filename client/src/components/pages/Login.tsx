@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import Authorization from '../Authorization';
 import { setUser } from '../../redux/authSlice';
+import { Link } from 'react-router-dom';
 
 const BACKEND_URL = 'http://localhost:3000';
 
@@ -156,6 +157,20 @@ const Login = () => {
           <div className='relative w-full'>
             <GetStartedButton text={'Login'} className='w-full absolute' />
           </div>
+
+          <Link to='/login'>
+            <div className='text-center mt-4 text-sm text-purple-500 dark:text-neutral-200'>
+              <p>
+                You have an account already? Well that's great,{' '}
+                <span
+                  className='text-purple-500 dark:text-neutral-200 cursor-pointer underline'
+                  onClick={() => navigate('/register')}
+                >
+                  Register
+                </span>
+              </p>
+            </div>
+          </Link>
         </form>
       </div>
     </div>
