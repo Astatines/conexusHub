@@ -9,7 +9,7 @@ export interface IShop extends Document {
   owner: IUser['_id']; // Reference to the user who owns the shop
   location: string; // Location of the shop
   imageURL: string; // URL for the shop's image
-  products: IProduct['_id'][]; // Array of product ObjectIds
+  products?: IProduct['_id'][]; // Array of product ObjectIds
 }
 
 // Create the Shop Schema with the required fields

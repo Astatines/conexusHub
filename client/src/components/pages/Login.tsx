@@ -9,7 +9,7 @@ import { BadgeAlert } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import Authorization from '../Authorization';
-import { setUser } from '../../redux/authSlice';
+import { setUser, setToken } from '../../redux/authSlice';
 import { Link } from 'react-router-dom';
 
 const BACKEND_URL = 'http://localhost:3000';
@@ -64,8 +64,10 @@ const Login = () => {
           },
         }
       );
+      console.log(response.data);
       setMessage(response.data.message);
       dispatch(setUser(response.data.user));
+      dispatch(setToken(response.data.token));
       setSuccess(true);
       resetForm();
       scrollToTop();
@@ -92,7 +94,7 @@ const Login = () => {
   }, [error, success, navigate]);
 
   return (
-    <div className='min-h-screen p-10 pt-4 bg-black text-purple-500 flex items-center flex-col justify-center'>
+    <div className='min-h-screen  bg-black text-purple-500 flex items-center flex-col '>
       <Authorization />
       {success || error ? (
         <MovingGradient className='rounded-xl shadow-md mb-4 shake'>

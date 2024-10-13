@@ -8,15 +8,13 @@ import MovingGradient from '../ui/moving-gradient';
 import { BadgeAlert } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Authorization from '../Authorization';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../redux/store';
 
 const BACKEND_URL = 'http://localhost:3000';
 
 const MarketR = () => {
-  useEffect(() => {
-    axios.get(`${BACKEND_URL}/api/shop/register`).then((res) => {
-      console.log(res.data.message);
-    });
-  }, []);
+  const { user, token } = useSelector((state: RootState) => state.auth);
 
   const [shopName, setShopName] = useState('');
   const [estd, setEstd] = useState('');
@@ -73,6 +71,7 @@ const MarketR = () => {
     formData.append('price', price);
     formData.append('unit', unit);
     formData.append('productImageURL', productImageURL);
+    formData.append('owner', user?._id || '');
 
     const resetForm = () => {
       setShopName('');
@@ -95,7 +94,10 @@ const MarketR = () => {
         `${BACKEND_URL}/api/shop/register`,
         formData,
         {
-          headers: { 'Content-Type': 'multipart/form-data' },
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: `${token}`,
+          },
         }
       );
       setMessage(response.data);
@@ -103,7 +105,7 @@ const MarketR = () => {
       resetForm();
       scrollToTop();
     } catch (err) {
-      console.error(err);
+      console.log(err);
       setMessage('Registration Failed! Please try again');
       setError(true);
       scrollToTop();
@@ -125,7 +127,7 @@ const MarketR = () => {
   }, [error, success, navigate]);
 
   return (
-    <div className='min-h-screen p-10 pt-4 bg-black text-purple-500 flex items-center relative flex-col'>
+    <div className='min-h-screen p-10 pt-0 bg-black text-purple-500 flex items-center relative flex-col'>
       <Authorization />
       {success || error ? (
         <MovingGradient className='rounded-xl shadow-md mb-4 shake '>

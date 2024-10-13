@@ -6,10 +6,16 @@ const getUserFromLocalStorage = (): IUser | null => {
   return user ? JSON.parse(user) : null;
 };
 
+const getTokenFromLocalStorage = (): string | null => {
+  const token = localStorage.getItem('token');
+  return token ? token : null;
+};
+
 const authSlice = createSlice({
   name: 'auth',
   initialState: {
     user: getUserFromLocalStorage(),
+    token: getTokenFromLocalStorage(),
   },
   reducers: {
     setUser: (state, action: PayloadAction<IUser | null>) => {
@@ -21,12 +27,23 @@ const authSlice = createSlice({
       }
     },
 
+    setToken: (state, action: PayloadAction<string | null>) => {
+      state.token = action.payload as string;
+      if (state.token) {
+        localStorage.setItem('token', state.token);
+      } else {
+        localStorage.removeItem('token');
+      }
+    },
+
     resetState: (state) => {
       state.user = null;
+      state.token = null;
       localStorage.removeItem('user');
+      localStorage.removeItem('token');
     },
   },
 });
 
-export const { setUser, resetState } = authSlice.actions;
+export const { setUser, setToken, resetState } = authSlice.actions;
 export default authSlice.reducer;

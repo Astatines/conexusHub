@@ -43,19 +43,8 @@ const upload = multer({
   },
 });
 
-router.get(
-  '/register',
-
-  async (req: Request, res: Response) => {
-    res.status(200).send({
-      message: 'Hi from /api/register',
-    });
-  }
-);
-
 router.post(
   '/register',
-  authenticateToken,
   upload.fields([
     {
       name: 'shopImageURL',
@@ -67,6 +56,7 @@ router.post(
     },
   ]),
   async (req, res) => {
+    console.log('server reached');
     console.log(req.body, req.files);
     res
       .status(200)

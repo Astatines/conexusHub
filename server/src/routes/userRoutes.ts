@@ -141,6 +141,7 @@ router.post(
     res.status(200).send({
       message: 'Login Successful! Conexus is now open to you!',
       user: user,
+      token: token,
     });
   })
 );

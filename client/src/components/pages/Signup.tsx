@@ -126,7 +126,7 @@ const Signup = () => {
   }, [error, success, navigate]);
 
   return (
-    <div className='min-h-screen p-10 pt-4 bg-black text-purple-500 flex items-center flex-col'>
+    <div className='min-h-screen p-10 pt-0 bg-black text-purple-500 flex items-center flex-col'>
       <Authorization />
       {success || error ? (
         <MovingGradient className='rounded-xl shadow-md mb-4 shake'>
