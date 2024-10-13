@@ -100,7 +100,7 @@ const MarketR = () => {
           },
         }
       );
-      setMessage(response.data);
+      setMessage(response.data.message);
       setSuccess(true);
       resetForm();
       scrollToTop();
