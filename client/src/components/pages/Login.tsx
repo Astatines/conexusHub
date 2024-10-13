@@ -158,14 +158,11 @@ const Login = () => {
             <GetStartedButton text={'Login'} className='w-full absolute' />
           </div>
 
-          <Link to='/login'>
+          <Link to='/signup'>
             <div className='text-center mt-4 text-sm text-purple-500 dark:text-neutral-200'>
               <p>
-                You have an account already? Well that's great,{' '}
-                <span
-                  className='text-purple-500 dark:text-neutral-200 cursor-pointer underline'
-                  onClick={() => navigate('/register')}
-                >
+                New to Conexus? Well that's great,{' '}
+                <span className='text-white dark:text-neutral-200 cursor-pointer underline'>
                   Register
                 </span>
               </p>

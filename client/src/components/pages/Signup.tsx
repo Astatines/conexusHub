@@ -258,12 +258,12 @@ const Signup = () => {
           <Link to='/login'>
             <div className='text-center mt-4 text-sm text-purple-500 dark:text-neutral-200'>
               <p>
-                New to Conexus? Well that's great,{' '}
+                Already a Conexite? Well that's great,{' '}
                 <span
                   className='dark:text-neutral-200 cursor-pointer text-white underline'
                   onClick={() => navigate('/register')}
                 >
-                  Register
+                  Login
                 </span>
               </p>
             </div>
