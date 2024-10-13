@@ -151,11 +151,27 @@ router.post(
   }
 );
 
-router.get('/', async (req: Request, res: Response) => {
+router.get('/explore', async (req: Request, res: Response) => {
   const shops = await shopModel.find({}).populate('owner');
   console.log(shops);
   res.send({
     shops: shops,
+  });
+});
+
+router.get('/:id', async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  console.log(id);
+
+  const shop = await shopModel
+    .findOne({
+      _id: id,
+    })
+    .populate('products');
+
+  res.status(200).send({
+    shop,
   });
 });
 

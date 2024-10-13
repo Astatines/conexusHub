@@ -22,26 +22,28 @@ interface IShop {
   owner: IUser; // Reference to the user who owns the shop
   location: string; // Location of the shop
   shopImageURL: string; // URL for the shop's image
-  products: IProduct['_id'][]; // Array of product ObjectIds
+  products: IProduct[]; // Array of product ObjectIds
 }
 
 interface ICartItem {
-  product: IProduct['_id'];
+  product: IProduct;
   quantity: number;
 }
 
 interface IProduct {
+  _id: string;
   productName: string;
   productImageURL: string;
   quantity: number;
   price: number;
   unit: string;
-  shop: IShop['_id'];
+  shop: IShop;
   category: string;
 }
 
 interface ICart {
-  owner: IUser['_id'];
+  _id: string;
+  owner: IUser;
   items: ICartItem[];
   totalAmount: number;
 }

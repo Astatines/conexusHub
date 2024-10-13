@@ -5,7 +5,7 @@ const cards = [
   {
     title: 'Explore Marketplace',
     src: shop01,
-    link: '/marketplace',
+    link: '/explore-marketplace',
   },
   {
     title: 'Register your own Marketplace',
