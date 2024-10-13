@@ -151,4 +151,12 @@ router.post(
   }
 );
 
+router.get('/', async (req: Request, res: Response) => {
+  const shops = await shopModel.find({}).populate('owner');
+  console.log(shops);
+  res.send({
+    shops: shops,
+  });
+});
+
 export default router;
