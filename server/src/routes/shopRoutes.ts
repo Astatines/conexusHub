@@ -50,6 +50,16 @@ const upload = multer({
   },
 });
 
+router.get(
+  '/register',
+  authenticateToken,
+  async (req: Request, res: Response) => {
+    res.send({
+      message: 'Register Marketplace',
+    });
+  }
+);
+
 router.post(
   '/register',
   upload.fields([

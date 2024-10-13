@@ -124,13 +124,7 @@ router.post(
     console.log(isMatch);
 
     // Create a JWT token
-    const token = jwt.sign(
-      { id: user._id, email: user.email },
-      process.env.JWT_SECRET as string,
-      {
-        expiresIn: '1h',
-      }
-    );
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET as string);
 
     console.log(token);
     res.cookie('token', token, {

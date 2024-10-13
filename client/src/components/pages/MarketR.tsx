@@ -16,6 +16,26 @@ const BACKEND_URL = 'http://localhost:3000';
 const MarketR = () => {
   const { user, token } = useSelector((state: RootState) => state.auth);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`${BACKEND_URL}/api/shop/register`, {
+          headers: {
+            Authorization: `Bearer ${token}`, // Correctly formatting the Bearer token
+          },
+        });
+        console.log('Response data:', response.data);
+      } catch (error) {
+        console.error('Error fetching data:', error); // Log the error for debugging
+      }
+    };
+
+    if (token) {
+      // Ensure token is available before making the request
+      fetchData();
+    }
+  }, [token]);
+
   const [shopName, setShopName] = useState('');
   const [estd, setEstd] = useState('');
   const [location, setLocation] = useState('');
@@ -104,8 +124,8 @@ const MarketR = () => {
       setSuccess(true);
       resetForm();
       scrollToTop();
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      console.error(error);
       setMessage('Registration Failed! Please try again');
       setError(true);
       scrollToTop();
