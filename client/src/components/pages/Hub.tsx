@@ -1,6 +1,6 @@
 import { FocusCards } from '../ui/focus-cards';
 import { shop01, shop02, service01, service02 } from '../../assets';
-
+import Authorization from '../Authorization';
 const cards = [
   {
     title: 'Explore Marketplace',
@@ -26,7 +26,8 @@ const cards = [
 
 const Hub = () => {
   return (
-    <div className='bg-black text-purple-500'>
+    <div className='bg-black text-purple-500 min-h-screen flex flex-col items-center justify-center '>
+      <Authorization />
       <FocusCards cards={cards} />
     </div>
   );

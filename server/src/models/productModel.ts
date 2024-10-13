@@ -3,8 +3,8 @@ import { IShop } from './shopModel'; // Assuming you have a separate shop model 
 
 // Define the Product interface extending Document from mongoose
 export interface IProduct extends Document {
-  name: string;
-  imageURL: string;
+  productName: string;
+  productImageURL: string;
   quantity: number;
   price: number;
   unit: string;
@@ -15,11 +15,11 @@ export interface IProduct extends Document {
 // Create the Product Schema with the required fields
 const ProductSchema: Schema<IProduct> = new Schema(
   {
-    name: {
+    productName: {
       type: String,
       required: true, // Mark as required
     },
-    imageURL: {
+    productImageURL: {
       type: String,
       default: './defaultProduct.png',
     },
