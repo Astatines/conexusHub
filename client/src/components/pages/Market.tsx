@@ -7,41 +7,46 @@ import { def_item } from '../../assets';
 import AnimatedBorderTrail from '../ui/border-trail';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
+
 const BACKEND_URL = 'http://localhost:3000';
 
 const Marketplace = () => {
   const { id } = useParams();
   const [shop, setShop] = useState<IShop | undefined>(undefined);
-  const [quantity, setQuantity] = useState(0);
+  const [quantities, setQuantities] = useState<{ [key: string]: number }>({});
+  const [loading, setLoading] = useState<boolean>(true); // Loading state
+  const [error, setError] = useState<string | null>(null); // Error state
 
   const { user } = useSelector((state: RootState) => state.auth);
 
   const changeQuantity = (
     symbol: string,
-    quantity: number,
-    setQuantity: (value: number) => void,
+    productId: string,
+    currentQuantity: number,
     productQuantity: number
   ) => {
-    if (symbol === '-') {
-      if (quantity >= 1) {
-        setQuantity(quantity - 1);
-      }
-    }
-    if (symbol === '+') {
-      if (quantity < productQuantity) {
-        setQuantity(quantity + 1);
-      }
-    }
-  };
-  const addToBag = (
-    productQuantity: number,
-    quantity: number,
-    setQuantity: (value: number) => void
-  ) => {
-    console.log('clicked');
+    const currentQty = currentQuantity || 0; // Handle undefined quantities
+    setQuantities((prevQuantities) => {
+      const newQuantity =
+        symbol === '-' && currentQty > 0
+          ? currentQty - 1
+          : symbol === '+' && currentQty < productQuantity
+          ? currentQty + 1
+          : currentQty;
 
-    productQuantity -= quantity;
-    setQuantity(0);
+      return { ...prevQuantities, [productId]: newQuantity };
+    });
+  };
+
+  const addToBag = (productId: string, quantity: number) => {
+    const selectedQuantity = quantities[productId] || 0;
+    console.log('clicked', selectedQuantity);
+
+    // Perform any further logic, like adding to a shopping cart
+
+    // Reset quantity for this product after adding to the bag
+    setQuantities((prevQuantities) => ({ ...prevQuantities, [productId]: 0 }));
+    console.log(quantity);
   };
 
   useEffect(() => {
@@ -51,14 +56,22 @@ const Marketplace = () => {
         console.log(response.data.shop);
         setShop(response.data.shop);
       } catch (error) {
+        setError('Failed to fetch shop data');
         console.error('Error fetching data:', error);
+      } finally {
+        setLoading(false); // Set loading to false after fetching data
       }
     };
     fetchData();
   }, [id]);
 
+  if (loading) {
+    return <div>Loading...</div>; // Display loading state
+  }
+
   return (
     <div className='min-h-screen bg-background text-text flex items-center relative flex-col pb-10'>
+      {error ? <p className='text-red-500'>{error}</p> : null}
       <Authorization />
       <div className='grid p-10 pt-0 grid-cols-4 max-xl:grid-cols-3 max-lg:grid-cols-2 max-sm:grid-cols-1 gap-6'>
         {shop?.products.map((product: IProduct) => (
@@ -96,21 +109,31 @@ const Marketplace = () => {
                 <button
                   className='text-text shadow-inner rounded-xl p-3 w-full bg-secondary hover:bg-primary hover:text-background font-bold transition-all ease-in'
                   onClick={() =>
-                    changeQuantity('-', quantity, setQuantity, product.quantity)
+                    changeQuantity(
+                      '-',
+                      product._id,
+                      quantities[product._id],
+                      product.quantity
+                    )
                   }
                 >
                   -
                 </button>
                 <input
                   className='bg-background w-[60px] outline-none text-center text-text font-bold'
-                  value={quantity}
+                  value={quantities[product._id] || 0}
                   type='text'
                   readOnly
                 />
                 <button
                   className='text-text shadow-inner rounded-xl p-3 w-full bg-secondary hover:bg-primary hover:text-background font-bold transition-all ease-in'
                   onClick={() =>
-                    changeQuantity('+', quantity, setQuantity, product.quantity)
+                    changeQuantity(
+                      '+',
+                      product._id,
+                      quantities[product._id],
+                      product.quantity
+                    )
                   }
                 >
                   +
@@ -119,7 +142,7 @@ const Marketplace = () => {
               <button
                 className='text-text shadow-inner rounded-xl my-1 p-3 w-full bg-secondary hover:bg-primary hover:text-background font-bold transition-all ease-in'
                 onClick={() =>
-                  addToBag(product.quantity, quantity, setQuantity)
+                  addToBag(product._id, quantities[product._id] || 0)
                 }
               >
                 Add to Bag
