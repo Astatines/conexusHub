@@ -94,12 +94,12 @@ const Login = () => {
   }, [error, success, navigate]);
 
   return (
-    <div className='min-h-screen  bg-black text-purple-500 flex items-center flex-col '>
+    <div className='min-h-screen  bg-background text-text flex items-center flex-col '>
       <Authorization />
       {success || error ? (
         <MovingGradient className='rounded-xl shadow-md mb-4 shake'>
           <div className='w-64 p-4 flex items-center flex-col '>
-            <h4 className='text-md mb-2 flex flex-row items-center  gap-2 font-bold text-purple-500'>
+            <h4 className='text-md mb-2 flex flex-row items-center  gap-2 font-bold text-text'>
               <span>Conexus Alert!</span>
               <BadgeAlert />
             </h4>
@@ -110,11 +110,11 @@ const Login = () => {
         </MovingGradient>
       ) : null}
 
-      <div className='max-w-lg w-full mx-auto md:rounded-2xl p-6 md:p-8 shadow-input bg-zinc-900 rounded-xl'>
-        <h2 className='font-bold text-2xl text-purple-500 dark:text-neutral-200 mb-4'>
+      <div className='max-w-lg w-full mx-auto md:rounded-2xl p-6 md:p-8 shadow-input bg-background rounded-xl'>
+        <h2 className='font-bold text-2xl text-text dark:text-neutral-200 mb-4'>
           Login to Conexus
         </h2>
-        <p className='text-sm text-purple-500 dark:text-neutral-200 mb-6'>
+        <p className='text-sm text-text dark:text-neutral-200 mb-6'>
           One step away to access your dashboard.
         </p>
 
@@ -122,7 +122,7 @@ const Login = () => {
 
         <form onSubmit={handleSubmit} className='space-y-6'>
           <section>
-            <h3 className='font-semibold text-lg text-purple-500'>
+            <h3 className='font-semibold text-lg text-text'>
               Login Credentials
             </h3>
             <div className='bg-gradient-to-r from-transparent via-purple-300 dark:via-purple-700 to-transparent my-4 h-[1px] w-full' />
@@ -155,14 +155,14 @@ const Login = () => {
 
           {/* Register Button */}
           <div className='relative w-full'>
-            <GetStartedButton text={'Login'} className='w-full absolute' />
+            <GetStartedButton text={'Login'} className='w-full bg-secondary hover:bg-primary absolute' />
           </div>
 
           <Link to='/signup'>
-            <div className='text-center mt-4 text-sm text-purple-500 dark:text-neutral-200'>
+            <div className='text-center mt-4 text-sm text-text dark:text-neutral-200'>
               <p>
                 New to Conexus? Well that's great,{' '}
-                <span className='text-white dark:text-neutral-200 cursor-pointer underline'>
+                <span className='text-accent dark:text-neutral-200 cursor-pointer underline'>
                   Register
                 </span>
               </p>

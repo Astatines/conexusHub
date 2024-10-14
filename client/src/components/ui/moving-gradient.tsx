@@ -18,7 +18,7 @@ export default function MovingGradient({
   return (
     <div
       {...props}
-      className={cn('relative overflow-hidden bg-white', className)}
+      className={cn('relative overflow-hidden bg-background', className)}
     >
       <div
         className={cn(

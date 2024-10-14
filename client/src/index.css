@@ -6,6 +6,26 @@
   font-family: 'Inter', sans-serif;
 }
 
+/* global.css or index.css */
+:root {
+  /* Light Theme (default) */
+  --primary-color: #0d52ff; /* Soft blue */
+  --secondary-color: #3b82f680; /* Bright yellow */
+  --accent-color: #5d5d69; /* Strong red */
+  --background-color: #ffffff; /* Light grayish */
+  --text-color: #121118;
+  --shadow-color: #94a3b8; /* Darker grayish blue */
+}
+
+/* Dark Mode */
+.dark-mode {
+  --primary-color: #0d52ff; /* Deep blue */
+  --secondary-color: #3b82f680; /* Soft orange */
+  --accent-color: #d1d5db; /* Light red */
+  --background-color: #121118; /* Dark background */
+  --text-color: #ffffff; /* Soft light gray */
+}
+
 @keyframes shake {
   0% {
     transform: translateX(0);
@@ -41,4 +61,9 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+body {
+  background-color: var(--background-color);
+  color: var(--text-color);
 }

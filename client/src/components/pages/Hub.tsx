@@ -26,7 +26,7 @@ const cards = [
 
 const Hub = () => {
   return (
-    <div className='bg-black text-purple-500 min-h-screen flex flex-col items-center justify-center '>
+    <div className='bg-background text-text min-h-screen flex flex-col items-center justify-center px-10 '>
       <Authorization />
       <FocusCards cards={cards} />
     </div>

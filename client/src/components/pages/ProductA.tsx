@@ -108,27 +108,27 @@ const AddProduct = () => {
   }, [error, success, navigate, id]);
 
   return (
-    <div className='min-h-screen p-10 pt-0 bg-black text-purple-500 flex items-center relative flex-col'>
+    <div className='min-h-screen p-10 pt-0 bg-background text-text flex items-center relative flex-col'>
       <Authorization />
       {success || error ? (
         <MovingGradient className='rounded-xl shadow-md mb-4 shake '>
           <div className='w-64 p-4 flex items-center flex-col'>
-            <h4 className='text-md mb-2 flex flex-row items-center gap-2 font-bold text-purple-500'>
+            <h4 className='text-md mb-2 flex flex-row items-center gap-2 font-bold text-text'>
               <span>Conexus Alert!</span>
               <BadgeAlert />
             </h4>
-            <p className='break-words text-sm text-black/80 text-center'>
+            <p className='break-words text-sm text-text/80 text-center'>
               {message}
             </p>
           </div>
         </MovingGradient>
       ) : null}
 
-      <div className='max-w-lg w-full mx-auto md:rounded-2xl p-6 md:p-8 shadow-input bg-zinc-900 rounded-xl'>
-        <h2 className='font-bold text-2xl text-purple-500 dark:text-neutral-200 mb-4'>
+      <div className='max-w-lg w-full mx-auto md:rounded-2xl p-6 md:p-8 shadow-input bg-background rounded-xl'>
+        <h2 className='font-bold text-2xl text-text dark:text-neutral-200 mb-4'>
           Add Your Product
         </h2>
-        <p className='text-purple-400 text-sm max-w-sm mb-6 dark:text-neutral-300'>
+        <p className='text-text text-sm max-w-sm mb-6 dark:text-neutral-300'>
           The more the items, the more the customer, let it slide.
         </p>
         <div className='bg-gradient-to-r from-transparent via-purple-300 dark:via-purple-700 to-transparent my-4 h-[1px] w-full' />
@@ -137,9 +137,7 @@ const AddProduct = () => {
           {/* Marketplace Details */}
 
           <section>
-            <h3 className='font-semibold text-lg text-purple-500'>
-              Product Details
-            </h3>
+            <h3 className='font-semibold text-lg text-text'>Product Details</h3>
             <div className='bg-gradient-to-r from-transparent via-purple-300 dark:via-purple-700 to-transparent my-4 h-[1px] w-full' />
             <div className='space-y-4'>
               <LabelInputContainer>
@@ -217,7 +215,7 @@ const AddProduct = () => {
           <div className='relative w-full'>
             <GetStartedButton
               text={'Add to Shop'}
-              className='w-full absolute'
+              className='w-full bg-secondary hover:bg-primary absolute'
             />
           </div>
         </form>

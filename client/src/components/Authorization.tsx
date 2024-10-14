@@ -21,7 +21,7 @@ export default function Authorization() {
           trailColor='purple'
           trailSize='md'
         >
-          <ul className='flex justify-center text-purple-500 items-center w-[400px] py-5 rounded-xl transition-transform font-extrabold transform hover:scale-105 bg-zinc-900 gap-4'>
+          <ul className='flex justify-center text-text items-center w-[400px] py-5 rounded-xl transition-transform font-extrabold transform hover:scale-105 bg-secondary hover:bg-primary hover:text-background gap-4'>
             {user ? user.userName : 'Get Authorized'}
             <p className='font-extrabold text-5xl rounded-full '></p>
           </ul>

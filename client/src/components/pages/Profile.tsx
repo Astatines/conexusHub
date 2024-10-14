@@ -7,12 +7,13 @@ import axios from 'axios';
 import { RootState } from '../../redux/store';
 import { def_user } from '../../assets';
 import { setUser } from '../../redux/authSlice';
+import GetStartedButton from '../ui/get-started-button';
 
 const BACKEND_URL = 'http://localhost:3000';
 const Profile = () => {
   const user = useSelector((state: RootState) => state.auth.user);
   const [updatedUser, setUpdatedUser] = useState(user);
-
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -38,19 +39,32 @@ const Profile = () => {
       });
   }, [dispatch, user?.email]);
 
-  const handleUpdate = (e: SubmitEvent) => {
+  const handleUpdate = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    axios
-      .put(`${BACKEND_URL}/api/user/profile/${user?._id}`, {
-        userName,
-        number,
-        address,
-      })
-      .then((res) => {
-        console.log(res.data);
-        setUpdatedUser(res.data.user);
-        dispatch(setUser(res.data.user));
-      });
+    setLoading(true);
+
+    try {
+      const response = await axios.put(
+        `${BACKEND_URL}/api/user/profile/${user?._id}`,
+        {
+          userName,
+          number,
+          address,
+        }
+      );
+
+      if (response.status === 200) {
+        console.log(response.data);
+        setUpdatedUser(response.data.user);
+        dispatch(setUser(response.data.user));
+      } else {
+        console.error('Failed to update user profile', response);
+      }
+    } catch (error) {
+      console.error('Error updating user profile:', error);
+    } finally {
+      setLoading(false); // Reset loading state
+    }
   };
 
   return (
@@ -58,7 +72,7 @@ const Profile = () => {
       <Authorization />
       <div className='flex flex-row max-w-[1320px] w-full gap-10 items-center justify-center max-md:flex-col '>
         <div className=''>
-          <form className='flex flex-col gap-4'>
+          <form onSubmit={handleUpdate} className='flex flex-col gap-4'>
             <label
               className=' flex justify-between items-center  rounded-xl pl-4 text-sm w-[400px] '
               htmlFor='userName'
@@ -101,17 +115,17 @@ const Profile = () => {
                 onChange={(e) => setNumber(Number(e.target.value))}
               />
             </label>
-
             <button
-              onClick={() => handleUpdate}
-              className='primary  rounded-xl py-2 '
+              className='bg-secondary hover:bg-primary py-3 rounded-xl text-text hover:text-background font-bold transition-all ease-in'
+              type='submit'
+              disabled={loading}
             >
-              Update
+              {loading ? 'Updating...' : 'Update'}
             </button>
           </form>
         </div>
-        <div className=' max-w-[400px] w-full  rounded-xl relative h-[400px]'>
-          <div className='h-[115px] shadow-sm  bg-zinc-800'>
+        <div className='shadow-inner border-t-2 shadow-shadow max-w-[400px] w-full  rounded-xl relative '>
+          <div className='h-[115px] shadow-shadow shadow-xl border-2 rounded-xl bg-background'>
             <img
               src={def_user}
               className='w-[150px] rounded-full absolute top-10 left-5  '
@@ -126,16 +140,20 @@ const Profile = () => {
               {address ? address : 'Where do you live?'}
             </p>
             <p className='text-2xl font-bold mt-4'>Shops: </p>
-            <p className='text-sm'>You have {user?.shops.length} shops</p>
+            <p className='text-sm'>You have {user?.shops.length} shops.</p>
+            <p className='text-2xl font-bold mt-4'>Cart: </p>
+            <p className='text-sm'>
+              You have {user?.cart.length} item in your cart.
+            </p>
+            <div onClick={handleLogout} className='relative my-4 flex w-full '>
+              <GetStartedButton
+                text={'Logout'}
+                className='w-full  absolute bg-secondary hover:bg-primary'
+              />
+            </div>
           </div>
         </div>
       </div>
-      <button
-        onClick={handleLogout}
-        className='bg-secondary hover-bg:  font-bold py-2  my-10 px-4 rounded'
-      >
-        Logout
-      </button>
     </div>
   );
 };

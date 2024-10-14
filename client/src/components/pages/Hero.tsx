@@ -9,12 +9,9 @@ const Hero = () => {
     <BackgroundBeamsWithCollision className='min-h-screen  flex flex-col w-screen '>
       <Authorization />
       <div className='flex flex-col items-center justify-center h-full w-screen'>
-        <SplitText
-          text={'CONEXUS'}
-          className=' font-semibold text-purple-500'
-        />
+        <SplitText text={'CONEXUS'} className=' font-semibold text-text' />
         <Link to='/hub'>
-          <GetStartedButton text='Explore' className='mt-4 w-[200px] ' />
+          <GetStartedButton text='Explore' className='mt-4 w-[200px] bg-secondary hover:bg-primary ' />
         </Link>
       </div>{' '}
     </BackgroundBeamsWithCollision>
