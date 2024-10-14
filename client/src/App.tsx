@@ -7,6 +7,7 @@ import Market from './components/pages/Market';
 import Login from './components/pages/Login';
 import Signup from './components/pages/Signup';
 import Profile from './components/pages/Profile';
+import ProductA from './components/pages/ProductA';
 
 const App = () => {
   return (
@@ -20,6 +21,7 @@ const App = () => {
         <Route path='/signup' element={<Signup />} />
         <Route path='/profile' element={<Profile />} />
         <Route path='/marketplace/:id' element={<Market />} />
+        <Route path='/marketplace/:id/add-product' element={<ProductA />} />
       </Routes>
     </Router>
   );

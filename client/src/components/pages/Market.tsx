@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import Authorization from '../Authorization';
 import axios from 'axios';
 import { IProduct, IShop } from '../../vite-env';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { def_item } from '../../assets';
 import AnimatedBorderTrail from '../ui/border-trail';
 import { useSelector } from 'react-redux';
@@ -130,11 +130,13 @@ const Marketplace = () => {
         ))}
 
         {user?._id === shop?.owner ? (
-          <AnimatedBorderTrail className='h-[400px] w-[300px]'>
-            <div className='bg-zinc-900 h-full rounded-xl flex items-center justify-center cursor-pointer'>
-              <p>Add Products</p>
-            </div>
-          </AnimatedBorderTrail>
+          <Link to={`/marketplace/${id}/add-product`}>
+            <AnimatedBorderTrail className='h-[400px] w-[300px]'>
+              <div className='bg-zinc-900 h-full rounded-xl flex items-center justify-center cursor-pointer'>
+                <p>Add Products</p>
+              </div>
+            </AnimatedBorderTrail>
+          </Link>
         ) : null}
       </div>
     </div>

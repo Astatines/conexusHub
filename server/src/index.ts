@@ -3,6 +3,7 @@ import express, { NextFunction } from 'express';
 import cors from 'cors';
 import shopRoutes from './routes/shopRoutes'; // Use import instead of require
 import userRoutes from './routes/userRoutes';
+import productRoutes from './routes/productRoutes';
 import bodyParser from 'body-parser';
 import { body } from 'express-validator';
 import mongoose from 'mongoose';
@@ -35,6 +36,7 @@ mongoose
 // Use the routes
 app.use('/api/shop', shopRoutes);
 app.use('/api/user', userRoutes);
+app.use('/api/product', productRoutes);
 
 app.listen(3000, () => {
   console.log('Server started on port 3000');
