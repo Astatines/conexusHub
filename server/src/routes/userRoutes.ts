@@ -155,25 +155,31 @@ router.get(
 );
 
 router.put('/profile/:id', async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const { userName, number, address } = req.body;
+  try {
+    const { id } = req.params;
+    const { userName, number, address } = req.body;
 
-  await userModel.updateOne(
-    {
+    await userModel.updateOne(
+      {
+        _id: id,
+      },
+      {
+        $set: { userName, address, number },
+      }
+    );
+    console.log('HI');
+
+    const updatedUser = await userModel.findOne({
       _id: id,
-    },
-    {
-      $set: { userName, address, number },
-    }
-  );
-  console.log('HI');
-
-  const updatedUser = await userModel.findOne({
-    _id: id,
-  });
-  console.log(updatedUser);
-  res.status(200).send({
-    user: updatedUser,
-  });
+    });
+    console.log(updatedUser);
+    res.status(200).send({
+      user: updatedUser,
+    });
+  } catch (error) {
+    res.status(400).send({
+      message: 'Error',
+    });
+  }
 });
 export default router;

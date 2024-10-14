@@ -103,10 +103,10 @@ const Login = () => {
   }
 
   return (
-    <div className='min-h-screen  bg-background text-text flex items-center flex-col '>
+    <div className='min-h-screen px-3 mb-10  bg-background text-text flex items-center flex-col '>
       <Authorization />
       {success || error ? (
-        <MovingGradient className='rounded-xl shadow-md mb-4 shake'>
+        <MovingGradient className='rounded-xl shadow-md mb-4 shake fixed top-10'>
           <div className='w-64 p-4 flex items-center flex-col '>
             <h4 className='text-md mb-2 flex flex-row items-center  gap-2 font-bold text-text'>
               <span>Conexus Alert!</span>

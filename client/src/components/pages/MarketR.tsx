@@ -18,6 +18,8 @@ const MarketR = () => {
   const { user, token } = useSelector((state: RootState) => state.auth);
   const [loading, setLoading] = useState<boolean>(true);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -28,17 +30,25 @@ const MarketR = () => {
         });
         console.log('Response data:', response.data);
       } catch (error) {
+        setLoading(false);
         console.error('Error fetching data:', error); // Log the error for debugging
       } finally {
         setLoading(false);
       }
     };
-
     if (token) {
       // Ensure token is available before making the request
       fetchData();
     }
-  }, [token]);
+    if (!token) {
+      setTimeout(() => {
+        setLoading(false);
+        navigate('/login');
+      }, 1000);
+
+      // Redirect to login page if token is not available
+    }
+  }, [token, navigate]);
 
   const [shopName, setShopName] = useState('');
   const [estd, setEstd] = useState('');
@@ -55,8 +65,6 @@ const MarketR = () => {
   const [message, setMessage] = useState('');
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
-
-  const navigate = useNavigate();
 
   const scrollToTop = () => {
     window.scrollTo({
@@ -158,7 +166,7 @@ const MarketR = () => {
     <div className='min-h-screen p-10 pt-0 bg-background text-text flex items-center relative flex-col'>
       <Authorization />
       {success || error ? (
-        <MovingGradient className='rounded-xl shadow-md mb-4 shake '>
+        <MovingGradient className='rounded-xl shadow-md mb-4 shake fixed top-10 '>
           <div className='w-64 p-4 flex items-center flex-col'>
             <h4 className='text-md mb-2 flex flex-row items-center gap-2 font-bold text-text'>
               <span>Conexus Alert!</span>

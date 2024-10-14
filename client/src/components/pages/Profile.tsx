@@ -52,6 +52,12 @@ const Profile = () => {
     setLoading(true);
     setUpdateError(null);
 
+    if (!user?._id) {
+      setLoading(false);
+      setUpdateError('Login first! And get this privilege as a Conexite.');
+      return;
+    }
+
     try {
       const response = await axios.put(
         `${BACKEND_URL}/api/user/profile/${user?._id}`,
@@ -87,6 +93,7 @@ const Profile = () => {
                 className='w-[300px] shadow-sm text-sm p-2 px-5 ml-3 rounded-xl outline-none'
                 type='text'
                 name='userName'
+                placeholder='Oh, what was your name?'
                 onChange={handleChange}
               />
             </label>
@@ -122,7 +129,7 @@ const Profile = () => {
             </button>
           </form>
         </div>
-        <div className='shadow-inner border-t-2 shadow-shadow max-w-[400px] w-full rounded-xl relative'>
+        <div className='shadow-inner border-t-2 shadow-shadow max-w-[400px] w-full rounded-xl relative pb-10'>
           <div className='h-[115px] shadow-shadow shadow-xl border-2 rounded-xl bg-background'>
             <img
               src={def_user}
@@ -143,12 +150,14 @@ const Profile = () => {
             <p className='text-sm'>
               You have {user?.cart.length} items in your cart.
             </p>
-            <div onClick={handleLogout} className='relative my-4 flex w-full'>
-              <GetStartedButton
-                text={'Logout'}
-                className='w-full absolute bg-secondary hover:bg-primary'
-              />
-            </div>
+            {user ? (
+              <div onClick={handleLogout} className='relative my-4 flex w-full'>
+                <GetStartedButton
+                  text={'Logout'}
+                  className='w-full absolute bg-secondary hover:bg-primary'
+                />
+              </div>
+            ) : null}
           </div>
         </div>
       </div>
