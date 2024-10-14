@@ -54,7 +54,7 @@ const Profile = () => {
       );
 
       if (response.status === 200) {
-        console.log(response.data);
+        console.log(response.data.user);
         setUpdatedUser(response.data.user);
         dispatch(setUser(response.data.user));
       } else {

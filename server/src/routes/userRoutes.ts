@@ -147,6 +147,7 @@ router.get(
   async (req: Request, res: Response) => {
     const { email } = req.headers;
     const user = await userModel.findOne({ email });
+    console.log(user);
     res.status(200).send({
       user,
     });
@@ -167,10 +168,12 @@ router.put('/profile/:id', async (req: Request, res: Response) => {
   );
   console.log('HI');
 
-  const updateUser = await userModel.findOne({
+  const updatedUser = await userModel.findOne({
     _id: id,
   });
-  console.log(updateUser);
-  res.status(200).send(updateUser);
+  console.log(updatedUser);
+  res.status(200).send({
+    user: updatedUser,
+  });
 });
 export default router;
