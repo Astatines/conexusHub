@@ -6,6 +6,7 @@ import fs from 'fs';
 import authenticateToken from '../middlewares/auth';
 import shopModel from '../models/shopModel';
 import productModel from '../models/productModel';
+import userModel from '../models/userModel';
 
 interface fileType {
   shopImageURL: Express.Multer.File[];
@@ -129,6 +130,14 @@ router.post(
       shop[0].products?.push(exampleProduct[0]._id); // Push the product ID into the shop's products array
 
       await shop[0].save({ session }); // Save the updated shop document with session
+
+      const shopOwner = await userModel.findOne({
+        _id: owner,
+      });
+      console.log(shopOwner);
+
+      shopOwner?.shops?.push(shop[0]);
+      await shopOwner?.save({ session });
 
       // Commit the transaction if everything is successful
       await session.commitTransaction();
