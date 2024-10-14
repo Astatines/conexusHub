@@ -5,6 +5,8 @@ import { IProduct, IShop } from '../../vite-env';
 import { useParams } from 'react-router-dom';
 import { def_item } from '../../assets';
 import AnimatedBorderTrail from '../ui/border-trail';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../redux/store';
 
 const BACKEND_URL = 'http://localhost:3000';
 
@@ -12,6 +14,8 @@ const Marketplace = () => {
   const { id } = useParams();
   const [shop, setShop] = useState<IShop | undefined>(undefined);
   const [quantity, setQuantity] = useState(0);
+
+  const { user } = useSelector((state: RootState) => state.auth);
 
   const changeQuantity = (
     symbol: string,
@@ -36,6 +40,7 @@ const Marketplace = () => {
     setQuantity: (value: number) => void
   ) => {
     console.log('clicked');
+
     productQuantity -= quantity;
     setQuantity(0);
   };
@@ -60,7 +65,7 @@ const Marketplace = () => {
         {shop?.products.map((product: IProduct) => (
           <div
             key={product._id}
-            className='relative max-w-[400px] w-full rounded-xl overflow-hidden shadow-lg bg-zinc-900 cursor-pointer'
+            className='relative w-[300px] f rounded-xl overflow-hidden shadow-lg bg-zinc-900 cursor-pointer'
           >
             {/* Product Image with Overlay */}
             <div className='relative'>
@@ -124,16 +129,13 @@ const Marketplace = () => {
           </div>
         ))}
 
-        <AnimatedBorderTrail className='h-[400px] w-[300px]'>
-          <div className='bg-zinc-900 h-full rounded-xl flex items-center justify-center cursor-pointer'>
-            <p>Add Products</p>
-          </div>
-        </AnimatedBorderTrail>
-        <AnimatedBorderTrail className='h-[400px] w-[300px]'>
-          <div className='bg-zinc-900 h-full rounded-xl flex items-center justify-center cursor-pointer'>
-            <p>Add Products</p>
-          </div>
-        </AnimatedBorderTrail>
+        {user?._id === shop?.owner ? (
+          <AnimatedBorderTrail className='h-[400px] w-[300px]'>
+            <div className='bg-zinc-900 h-full rounded-xl flex items-center justify-center cursor-pointer'>
+              <p>Add Products</p>
+            </div>
+          </AnimatedBorderTrail>
+        ) : null}
       </div>
     </div>
   );

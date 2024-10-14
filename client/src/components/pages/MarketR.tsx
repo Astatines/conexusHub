@@ -136,7 +136,7 @@ const MarketR = () => {
     if (success) {
       setTimeout(() => {
         setSuccess(false);
-        navigate('/marketplace');
+        navigate('/explore-marketplace');
       }, 2000);
     }
     if (error) {
