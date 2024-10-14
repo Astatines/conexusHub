@@ -7,6 +7,7 @@ import jwt from 'jsonwebtoken';
 import { IUser } from '../models/userModel';
 import userModel from '../models/userModel';
 import dotenv from 'dotenv';
+import authenticateToken from '../middlewares/auth';
 
 dotenv.config();
 
@@ -140,4 +141,36 @@ router.post(
   })
 );
 
+router.get(
+  '/profile',
+
+  async (req: Request, res: Response) => {
+    const { email } = req.headers;
+    const user = await userModel.findOne({ email });
+    res.status(200).send({
+      user,
+    });
+  }
+);
+
+router.put('/profile/:id', async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const { userName, number, address } = req.body;
+
+  await userModel.updateOne(
+    {
+      _id: id,
+    },
+    {
+      $set: { userName, address, number },
+    }
+  );
+  console.log('HI');
+
+  const updateUser = await userModel.findOne({
+    _id: id,
+  });
+  console.log(updateUser);
+  res.status(200).send(updateUser);
+});
 export default router;
