@@ -10,11 +10,13 @@ import { useNavigate } from 'react-router-dom';
 import Authorization from '../Authorization';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
+import Loader from '../Loader';
 
 const BACKEND_URL = 'http://localhost:3000';
 
 const MarketR = () => {
   const { user, token } = useSelector((state: RootState) => state.auth);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -27,6 +29,8 @@ const MarketR = () => {
         console.log('Response data:', response.data);
       } catch (error) {
         console.error('Error fetching data:', error); // Log the error for debugging
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -145,6 +149,10 @@ const MarketR = () => {
       }, 2000);
     }
   }, [error, success, navigate]);
+
+  if (loading) {
+    return <Loader />;
+  }
 
   return (
     <div className='min-h-screen p-10 pt-0 bg-background text-text flex items-center relative flex-col'>

@@ -8,11 +8,13 @@ import MovingGradient from '../ui/moving-gradient';
 import { BadgeAlert } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Authorization from '../Authorization';
+import Loader from '../Loader';
 
 const BACKEND_URL = 'http://localhost:3000';
 
 const AddProduct = () => {
   const { id } = useParams();
+  const [loading, setLoading] = useState<boolean>(false);
 
   const [productName, setProductName] = useState('');
   const [category, setCategory] = useState('');
@@ -71,20 +73,21 @@ const AddProduct = () => {
     };
 
     try {
-      const response = await axios.post(
-        `${BACKEND_URL}/api/product/add`,
-        formData,
-        {
+      setLoading(true);
+      await axios
+        .post(`${BACKEND_URL}/api/product/add`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
             id: id,
           },
-        }
-      );
-      setMessage(response.data.message);
-      setSuccess(true);
-      resetForm();
-      scrollToTop();
+        })
+        .then((res) => {
+          setLoading(false);
+          setMessage(res.data.message);
+          setSuccess(true);
+          resetForm();
+          scrollToTop();
+        });
     } catch (error) {
       console.error(error);
       setMessage('Adding Product Failed! Please try again');
@@ -124,102 +127,108 @@ const AddProduct = () => {
         </MovingGradient>
       ) : null}
 
-      <div className='max-w-lg w-full mx-auto md:rounded-2xl p-6 md:p-8 shadow-input bg-background rounded-xl'>
-        <h2 className='font-bold text-2xl text-text dark:text-neutral-200 mb-4'>
-          Add Your Product
-        </h2>
-        <p className='text-text text-sm max-w-sm mb-6 dark:text-neutral-300'>
-          The more the items, the more the customer, let it slide.
-        </p>
-        <div className='bg-gradient-to-r from-transparent via-purple-300 dark:via-purple-700 to-transparent my-4 h-[1px] w-full' />
-
-        <form onSubmit={handleSubmit} className='space-y-6'>
-          {/* Marketplace Details */}
-
-          <section>
-            <h3 className='font-semibold text-lg text-text'>Product Details</h3>
-            <div className='bg-gradient-to-r from-transparent via-purple-300 dark:via-purple-700 to-transparent my-4 h-[1px] w-full' />
-            <div className='space-y-4'>
-              <LabelInputContainer>
-                <Label htmlFor='productName'>Product Name</Label>
-                <Input
-                  id='productName'
-                  name='productName'
-                  value={productName}
-                  onChange={(e) => setProductName(e.target.value)}
-                  placeholder='Name of your product'
-                  type='text'
-                />
-              </LabelInputContainer>
-              <LabelInputContainer>
-                <Label htmlFor='category'>Category</Label>
-                <Input
-                  id='category'
-                  name='category'
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value)}
-                  placeholder='Product category'
-                  type='text'
-                />
-              </LabelInputContainer>
-              <LabelInputContainer>
-                <Label htmlFor='quantity'>Quantity</Label>
-                <Input
-                  id='quantity'
-                  name='quantity'
-                  value={quantity}
-                  onChange={(e) => setQuantity(e.target.value)}
-                  placeholder='Available quantity'
-                  type='number'
-                />
-              </LabelInputContainer>
-              <LabelInputContainer>
-                <Label htmlFor='price'>Price</Label>
-                <Input
-                  id='price'
-                  name='price'
-                  value={price}
-                  onChange={(e) => setPrice(e.target.value)}
-                  placeholder='Rs. 0.00'
-                  type='number'
-                />
-              </LabelInputContainer>
-              <LabelInputContainer>
-                <Label htmlFor='unit'>Unit of Measurement</Label>
-                <Input
-                  id='unit'
-                  name='unit'
-                  value={unit}
-                  onChange={(e) => setUnit(e.target.value)}
-                  placeholder='Kg, Litre, etc.'
-                  type='text'
-                />
-              </LabelInputContainer>
-              <LabelInputContainer>
-                <Label htmlFor='productImageURL'>Product Image</Label>
-                <Input
-                  id='productImageURL'
-                  ref={productImageRef}
-                  onChange={(e) =>
-                    setProductImageURL(e.target.files?.[0] || null)
-                  } // Only one onChange handler
-                  name='productImageURL'
-                  type='file' // Removed value prop
-                />
-              </LabelInputContainer>
-            </div>
-          </section>
+      {loading ? (
+        <Loader />
+      ) : (
+        <div className='max-w-lg w-full mx-auto md:rounded-2xl p-6 md:p-8 shadow-input bg-background rounded-xl'>
+          <h2 className='font-bold text-2xl text-text dark:text-neutral-200 mb-4'>
+            Add Your Product
+          </h2>
+          <p className='text-text text-sm max-w-sm mb-6 dark:text-neutral-300'>
+            The more the items, the more the customer, let it slide.
+          </p>
           <div className='bg-gradient-to-r from-transparent via-purple-300 dark:via-purple-700 to-transparent my-4 h-[1px] w-full' />
 
-          {/* Register Button */}
-          <div className='relative w-full'>
-            <GetStartedButton
-              text={'Add to Shop'}
-              className='w-full bg-secondary hover:bg-primary absolute'
-            />
-          </div>
-        </form>
-      </div>
+          <form onSubmit={handleSubmit} className='space-y-6'>
+            {/* Marketplace Details */}
+
+            <section>
+              <h3 className='font-semibold text-lg text-text'>
+                Product Details
+              </h3>
+              <div className='bg-gradient-to-r from-transparent via-purple-300 dark:via-purple-700 to-transparent my-4 h-[1px] w-full' />
+              <div className='space-y-4'>
+                <LabelInputContainer>
+                  <Label htmlFor='productName'>Product Name</Label>
+                  <Input
+                    id='productName'
+                    name='productName'
+                    value={productName}
+                    onChange={(e) => setProductName(e.target.value)}
+                    placeholder='Name of your product'
+                    type='text'
+                  />
+                </LabelInputContainer>
+                <LabelInputContainer>
+                  <Label htmlFor='category'>Category</Label>
+                  <Input
+                    id='category'
+                    name='category'
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value)}
+                    placeholder='Product category'
+                    type='text'
+                  />
+                </LabelInputContainer>
+                <LabelInputContainer>
+                  <Label htmlFor='quantity'>Quantity</Label>
+                  <Input
+                    id='quantity'
+                    name='quantity'
+                    value={quantity}
+                    onChange={(e) => setQuantity(e.target.value)}
+                    placeholder='Available quantity'
+                    type='number'
+                  />
+                </LabelInputContainer>
+                <LabelInputContainer>
+                  <Label htmlFor='price'>Price</Label>
+                  <Input
+                    id='price'
+                    name='price'
+                    value={price}
+                    onChange={(e) => setPrice(e.target.value)}
+                    placeholder='Rs. 0.00'
+                    type='number'
+                  />
+                </LabelInputContainer>
+                <LabelInputContainer>
+                  <Label htmlFor='unit'>Unit of Measurement</Label>
+                  <Input
+                    id='unit'
+                    name='unit'
+                    value={unit}
+                    onChange={(e) => setUnit(e.target.value)}
+                    placeholder='Kg, Litre, etc.'
+                    type='text'
+                  />
+                </LabelInputContainer>
+                <LabelInputContainer>
+                  <Label htmlFor='productImageURL'>Product Image</Label>
+                  <Input
+                    id='productImageURL'
+                    ref={productImageRef}
+                    onChange={(e) =>
+                      setProductImageURL(e.target.files?.[0] || null)
+                    } // Only one onChange handler
+                    name='productImageURL'
+                    type='file' // Removed value prop
+                  />
+                </LabelInputContainer>
+              </div>
+            </section>
+            <div className='bg-gradient-to-r from-transparent via-purple-300 dark:via-purple-700 to-transparent my-4 h-[1px] w-full' />
+
+            {/* Register Button */}
+            <div className='relative w-full'>
+              <GetStartedButton
+                text={'Add to Shop'}
+                className='w-full bg-secondary hover:bg-primary absolute'
+              />
+            </div>
+          </form>
+        </div>
+      )}
     </div>
   );
 };

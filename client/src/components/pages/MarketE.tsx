@@ -5,11 +5,13 @@ import { IShop } from '../../vite-env';
 import { cn } from '../../lib/utils';
 import { def_shop, def_user, def_item } from '../../assets';
 import { Link } from 'react-router-dom';
+import Loader from '../Loader';
 
 const BACKEND_URL = 'http://localhost:3000';
 
 const Marketplace = () => {
   const [shops, setShops] = useState<IShop[]>([]);
+  const [loading, setLoading] = useState<boolean>(true); // Loading state
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -17,10 +19,16 @@ const Marketplace = () => {
         setShops(response.data.shops);
       } catch (error) {
         console.error('Error fetching data:', error); // Log the error for debugging
+      } finally {
+        setLoading(false);
       }
     };
     fetchData();
   }, []);
+
+  if (loading) {
+    return <Loader />;
+  }
 
   return (
     <div className='min-h-screen bg-background text-text flex items-center relative flex-col '>

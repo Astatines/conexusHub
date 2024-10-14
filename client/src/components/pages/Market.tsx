@@ -7,6 +7,7 @@ import { def_item } from '../../assets';
 import AnimatedBorderTrail from '../ui/border-trail';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
+import Loader from '../Loader';
 
 const BACKEND_URL = 'http://localhost:3000';
 
@@ -66,7 +67,7 @@ const Marketplace = () => {
   }, [id]);
 
   if (loading) {
-    return <div>Loading...</div>; // Display loading state
+    return <Loader />; // Display loading state
   }
 
   return (

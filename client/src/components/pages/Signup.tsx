@@ -9,6 +9,7 @@ import { BadgeAlert } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Authorization from '../Authorization';
 import { Link } from 'react-router-dom';
+import Loader from '../Loader';
 
 const BACKEND_URL = 'http://localhost:3000';
 
@@ -19,6 +20,7 @@ const Signup = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
   //additional information
   const [number, setNumber] = useState('');
@@ -91,6 +93,7 @@ const Signup = () => {
     };
 
     try {
+      setLoading(true);
       const response = await axios.post(
         `${BACKEND_URL}/api/user/signup`,
         formData,
@@ -108,6 +111,8 @@ const Signup = () => {
       setMessage('Failed to Signup');
       setError(true);
       scrollToTop();
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -124,6 +129,10 @@ const Signup = () => {
       }, 2000);
     }
   }, [error, success, navigate]);
+
+  if (loading) {
+    return <Loader />;
+  }
 
   return (
     <div className='min-h-screen p-10 pt-0 bg-background text-text flex items-center flex-col'>

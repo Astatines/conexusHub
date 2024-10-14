@@ -11,11 +11,13 @@ import { useDispatch } from 'react-redux';
 import Authorization from '../Authorization';
 import { setUser, setToken } from '../../redux/authSlice';
 import { Link } from 'react-router-dom';
+import Loader from '../Loader';
 
 const BACKEND_URL = 'http://localhost:3000';
 
 const Login = () => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   //login information
 
   const dispatch = useDispatch();
@@ -55,6 +57,7 @@ const Login = () => {
     };
 
     try {
+      setLoading(true);
       const response = await axios.post(
         `${BACKEND_URL}/api/user/login`,
         formData,
@@ -76,6 +79,8 @@ const Login = () => {
       setMessage('Login Failed! Please try again');
       setError(true);
       scrollToTop();
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -92,6 +97,10 @@ const Login = () => {
       }, 2000);
     }
   }, [error, success, navigate]);
+
+  if (loading) {
+    return <Loader />;
+  }
 
   return (
     <div className='min-h-screen  bg-background text-text flex items-center flex-col '>
@@ -155,7 +164,10 @@ const Login = () => {
 
           {/* Register Button */}
           <div className='relative w-full'>
-            <GetStartedButton text={'Login'} className='w-full bg-secondary hover:bg-primary absolute' />
+            <GetStartedButton
+              text={'Login'}
+              className='w-full bg-secondary hover:bg-primary absolute'
+            />
           </div>
 
           <Link to='/signup'>
