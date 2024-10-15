@@ -4,7 +4,7 @@ import AnimatedDock from './ui/animated-dock';
 export default function Authorization() {
   return (
     <div className='w-full max-w-screen flex justify-center items-center '>
-      <div className='relative flex h-60 w-full items-center justify-center'>
+      <div className='relative h-40 flex  w-full items-center justify-center'>
         <AnimatedDock
           items={[
             {

@@ -81,7 +81,7 @@ const Profile = () => {
   };
 
   return (
-    <div className='flex flex-col items-center p-10 pt-0 w-screen'>
+    <div className='flex flex-col items-center p-10 pt-0 '>
       <Authorization />
       <div className='flex flex-row max-w-[1320px] w-full gap-10 items-center justify-center max-md:flex-col'>
         <div>
