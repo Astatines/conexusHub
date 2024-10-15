@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { resetState, setUser } from '../../redux/authSlice';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Authorization from '../Authorization';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
@@ -90,7 +90,7 @@ const Profile = () => {
               Name
               <input
                 value={formData.userName}
-                className='w-[300px] shadow-sm text-sm p-2 px-5 ml-3 rounded-xl outline-none'
+                className='w-[300px] shadow-sm shadow-shadow  text-sm p-2 px-5 ml-3 rounded-xl outline-none'
                 type='text'
                 name='userName'
                 placeholder='Oh, what was your name?'
@@ -101,18 +101,18 @@ const Profile = () => {
               Address
               <input
                 value={formData.address}
-                className='shadow-sm text-sm p-2 px-5 w-[300px] ml-3 rounded-xl outline-none'
+                className='shadow-sm shadow-shadow text-sm p-2 px-5 w-[300px] ml-3 rounded-xl outline-none'
                 type='text'
                 placeholder='Where do you live?'
                 name='address'
                 onChange={handleChange}
               />
             </label>
-            <label className='w-[400px] flex justify-between items-center rounded-xl pl-4 text-sm'>
+            <label className='w-[400px] flex justify-between items-center  rounded-xl pl-4 text-sm'>
               Number
               <input
                 value={formData.number}
-                className='shadow-sm text-sm p-2 px-5 w-[300px] ml-3 rounded-xl outline-none'
+                className='shadow-sm shadow-shadow  text-sm p-2 px-5 w-[300px] ml-3 rounded-xl outline-none'
                 type='text'
                 name='number'
                 placeholder='Contact Number'
@@ -129,13 +129,15 @@ const Profile = () => {
             </button>
           </form>
         </div>
-        <div className='shadow-inner border-t-2 shadow-shadow max-w-[400px] w-full rounded-xl relative pb-10'>
-          <div className='h-[115px] shadow-shadow shadow-xl border-2 rounded-xl bg-background'>
-            <img
-              src={def_user}
-              className='w-[150px] rounded-full absolute top-10 left-5'
-              alt='User Profile'
-            />
+        <div className=' max-w-[400px] w-full rounded-xl relative pb-10 border-2 border-secondary hover:border-primary transition-all ease-in '>
+          <div className='h-[115px] border-2 rounded-xl bg-background '>
+            <Link to=''>
+              <img
+                src={def_user}
+                className='w-[150px] hover:top-11 active:left-6  transition-all ease-in cursor-pointer  rounded-full absolute top-10 left-5'
+                alt='User Profile'
+              />
+            </Link>
           </div>
           <div className='h-full px-5 pt-[80px]'>
             <p className='font-bold text-2xl'>
@@ -150,14 +152,13 @@ const Profile = () => {
             <p className='text-sm'>
               You have {user?.cart.length} items in your cart.
             </p>
-            {user ? (
-              <div onClick={handleLogout} className='relative my-4 flex w-full'>
-                <GetStartedButton
-                  text={'Logout'}
-                  className='w-full absolute bg-secondary hover:bg-primary'
-                />
-              </div>
-            ) : null}
+
+            <div onClick={handleLogout} className='relative mt-4 flex w-full'>
+              <GetStartedButton
+                text={user ? 'Logout' : 'Login'}
+                className='w-full absolute bg-secondary hover:bg-primary'
+              />
+            </div>
           </div>
         </div>
       </div>
