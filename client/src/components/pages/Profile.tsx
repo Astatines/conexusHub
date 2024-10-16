@@ -133,8 +133,8 @@ const Profile = () => {
           <div className='h-[115px] border-2 rounded-xl bg-background '>
             <Link to=''>
               <img
-                src={def_user}
-                className='w-[150px] hover:top-11 active:left-6  transition-all ease-in cursor-pointer  rounded-full absolute top-10 left-5'
+                src={user?.userImageURL || def_user}
+                className='w-[150px] h-[150px] object-cover hover:top-11 active:left-6  transition-all ease-in cursor-pointer  rounded-full absolute top-10 left-5'
                 alt='User Profile'
               />
             </Link>

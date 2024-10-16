@@ -5,12 +5,12 @@ import shopRoutes from './routes/shopRoutes'; // Use import instead of require
 import userRoutes from './routes/userRoutes';
 import productRoutes from './routes/productRoutes';
 import bodyParser from 'body-parser';
-import { body } from 'express-validator';
 import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 import authenticateToken from './middlewares/auth';
 import { Request, Response } from 'express';
+
 
 dotenv.config();
 

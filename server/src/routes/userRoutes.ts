@@ -8,8 +8,10 @@ import { IUser } from '../models/userModel';
 import userModel from '../models/userModel';
 import dotenv from 'dotenv';
 import authenticateToken from '../middlewares/auth';
-
+import cloudinary from '../config/cloudinaryConfig';
 dotenv.config();
+import { UploadApiResponse } from 'cloudinary';
+import { unlinkSync } from 'fs';
 
 const router = express.Router();
 
@@ -51,7 +53,7 @@ const upload = multer({
 });
 
 // Async error wrapper
-const asyncHandler =
+export const asyncHandler =
   (fn: Function) => (req: Request, res: Response, next: NextFunction) =>
     Promise.resolve(fn(req, res, next)).catch(next);
 
@@ -59,42 +61,52 @@ router.post(
   '/signup',
   upload.single('userImageURL'),
   asyncHandler(async (req: Request, res: Response) => {
-    console.log('hi');
     const { email, password, userName, number, address } = req.body;
-    const filePath = req.file?.path;
-    console.log(filePath);
 
-    // Check if the user already exists
-    const existingUser = await userModel.findOne({ email });
-    console.log(existingUser);
+    //cloudinary ma upload garekoo
+    if (req.file) {
+      try {
+        const cloudinaryResult: UploadApiResponse =
+          await cloudinary.uploader.upload(req.file.path, {
+            folder: 'users',
+            use_filename: true,
+            resource_type: 'image',
+          });
 
-    if (existingUser) {
-      return res.status(400).send({
-        error: 'User already exists',
-      });
+        unlinkSync(req.file.path);
+
+        const imageUrl = cloudinaryResult.secure_url;
+
+        const existingUser = await userModel.findOne({ email });
+        if (existingUser) {
+          return res.status(400).send({
+            error: 'User already exists',
+          });
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        const newUser: IUser = await userModel.create({
+          email,
+          password: hashedPassword,
+          userName,
+          number,
+          address,
+          userImageURL: imageUrl,
+        });
+
+        // Respond with success
+        res.status(201).json({
+          message: 'User created successfully',
+          user: newUser,
+        });
+      } catch (error) {
+        console.error('Error uploading image to Cloudinary:', error);
+        return res.status(500).json({ error: 'Failed to upload image' });
+      }
+    } else {
+      return res.status(400).json({ error: 'No image file uploaded' });
     }
-
-    // Hash the password
-    const hashedPassword = await bcrypt.hash(password, 10);
-    console.log(hashedPassword);
-
-    // Create a new user
-    const newUser: IUser = await userModel.create({
-      email,
-      password: hashedPassword,
-      userName,
-      number,
-      address,
-      userImageURL: filePath || '',
-    });
-
-    console.log(newUser);
-
-    // Respond with success
-    res.status(200).send({
-      user: newUser,
-      message: 'SignUp Successful',
-    });
   })
 );
 

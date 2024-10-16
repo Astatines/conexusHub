@@ -86,13 +86,13 @@ const Marketplace = () => {
         {shop?.products.map((product: IProduct) => (
           <div
             key={product._id}
-            className='relative w-[320px] border-2 border-secondary hover:border-primary hover:translate-x-0.5 active:translate-y-0.5  transition-all ease-in rounded-xl overflow-hidden shadow-lg bg-background cursor-pointer'
+            className='relative w-[320px] border-2 border-secondary hover:border-primary hover:translate-x-0.5 active:translate-y-0.5  transition-all ease-in rounded-xl overflow-hidden shadow-lg bg-background '
           >
             {/* Product Image with Overlay */}
             <div className='relative'>
               <img
                 className='w-full h-[250px] object-cover rounded-t-xl'
-                src={def_item}
+                src={product.productImageURL}
                 alt={product.productName}
               />
             </div>
@@ -166,9 +166,45 @@ const Marketplace = () => {
 
         {user?._id === shop?.owner ? (
           <Link to={`/marketplace/${id}/add-product`}>
-            <AnimatedBorderTrail className='  w-[300px]'>
-              <div className='bg-background h-[460px] rounded-xl flex items-center justify-center text-4xl font-bold text-primary cursor-pointer'>
-                <p>Add Products</p>
+            <AnimatedBorderTrail className=''>
+              <div className='relative w-[320px] border-2 border-secondary hover:border-primary hover:translate-x-0.5 active:translate-y-0.5  transition-all ease-in rounded-xl overflow-hidden shadow-lg bg-background cursor-pointer'>
+                {/* Product Image with Overlay */}
+                <div className='relative'>
+                  <img
+                    className='w-full h-[250px] object-cover rounded-t-xl'
+                    src={def_item}
+                  />
+                </div>
+
+                {/* Quantity Controls and Add to Bag Button */}
+                <div className='px-4 py-2 '>
+                  <div className='flex bg-background rounded-xl my-2 items-center flex-col justify-between'>
+                    <div className='flex  w-full justify-between pb-3 '>
+                      <div>
+                        {' '}
+                        <h4 className='font-bold text-xl'>Product Name</h4>
+                        <p className='text-base'>Rs. Price/unit</p>
+                      </div>{' '}
+                    </div>
+
+                    <div className='flex w-full '>
+                      <button className='text-text shadow-inner rounded-xl p-3 w-full bg-secondary hover:bg-primary items-center flex justify-center hover:text-background font-bold transition-all ease-in active:translate-y-0.5 hover:translate-x-0.5'>
+                        <Minus />
+                      </button>
+                      <input
+                        className='bg-background w-[60px] outline-none text-center text-text font-bold'
+                        type='text'
+                        readOnly
+                      />
+                      <button className='text-text shadow-inner rounded-xl p-3 w-full bg-secondary hover:bg-primary hover:text-background font-bold transition-all flex items-center justify-center ease-i active:translate-y-0.5 hover:translate-x-0.5'>
+                        <Plus />
+                      </button>
+                    </div>
+                  </div>
+                  <button className='text-text shadow-inner rounded-xl my-1 p-3 w-full bg-secondary hover:bg-primary hover:text-background font-bold transition-all ease-in active:translate-y-0.5 hover:translate-x-0.5'>
+                    Add New Product
+                  </button>
+                </div>
               </div>
             </AnimatedBorderTrail>
           </Link>

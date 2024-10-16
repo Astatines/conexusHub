@@ -4,6 +4,10 @@ import fs from 'fs';
 import path from 'path';
 import productModel from '../models/productModel';
 import shopModel from '../models/shopModel';
+import cloudinary from '../config/cloudinaryConfig';
+import { UploadApiResponse } from 'cloudinary';
+import { unlinkSync } from 'fs';
+import { asyncHandler } from './userRoutes';
 
 const router = express.Router();
 
@@ -51,36 +55,55 @@ const upload = multer({
 router.post(
   '/add',
   upload.single('productImageURL'),
-  async (req: Request, res: Response) => {
+  asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.headers;
-    const file = req.file as Express.Multer.File | undefined;
-    console.log(req.body, req.file);
     const { productName, price, quantity, category, unit } = req.body;
-    const productImageURL = file?.filename;
-    console.log(productImageURL);
 
-    const newProduct = await productModel.create({
-      productName,
-      price,
-      quantity,
-      category,
-      unit,
-      productImageURL,
-      shop: id,
-    });
+    if (req.file) {
+      try {
+        const cloudinaryResult: UploadApiResponse =
+          await cloudinary.uploader.upload(req.file.path, {
+            folder: 'products',
+            use_filename: true,
+            resource_type: 'image',
+          });
+        unlinkSync(req.file.path);
 
-    const productWalaShop = await shopModel.findOne({
-      _id: id,
-    });
+        const imageUrl = cloudinaryResult.secure_url;
 
-    productWalaShop?.products?.push(newProduct);
-    console.log(productWalaShop);
-    await productWalaShop?.save();
+        const newProduct = await productModel.create({
+          productName,
+          price,
+          quantity,
+          category,
+          unit,
+          productImageURL: imageUrl,
+          shop: id,
+        });
 
-    res.status(200).send({
-      message: 'Product added successfully!',
-    });
-  }
+        const productWalaShop = await shopModel.findOne({
+          _id: id,
+        });
+
+        productWalaShop?.products?.push(newProduct);
+        console.log(productWalaShop);
+        await productWalaShop?.save();
+
+        res.status(200).send({
+          message: 'Product added successfully!',
+        });
+      } catch (error) {
+        console.log('Error uploading image to Cloudinary: ', error);
+        return res.status(500).json({
+          error: 'Failed to upload image',
+        });
+      }
+    } else {
+      return res.status(400).json({
+        error: 'No image file uploaded',
+      });
+    }
+  })
 );
 
 export default router;
