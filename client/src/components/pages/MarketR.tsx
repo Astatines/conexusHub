@@ -10,11 +10,15 @@ import { useNavigate } from 'react-router-dom';
 import Authorization from '../Authorization';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
+import Loader from '../Loader';
 
 const BACKEND_URL = 'http://localhost:3000';
 
 const MarketR = () => {
   const { user, token } = useSelector((state: RootState) => state.auth);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -26,15 +30,25 @@ const MarketR = () => {
         });
         console.log('Response data:', response.data);
       } catch (error) {
+        setLoading(false);
         console.error('Error fetching data:', error); // Log the error for debugging
+      } finally {
+        setLoading(false);
       }
     };
-
     if (token) {
       // Ensure token is available before making the request
       fetchData();
     }
-  }, [token]);
+    if (!token) {
+      setTimeout(() => {
+        setLoading(false);
+        navigate('/login');
+      }, 1000);
+
+      // Redirect to login page if token is not available
+    }
+  }, [token, navigate]);
 
   const [shopName, setShopName] = useState('');
   const [estd, setEstd] = useState('');
@@ -51,8 +65,6 @@ const MarketR = () => {
   const [message, setMessage] = useState('');
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
-
-  const navigate = useNavigate();
 
   const scrollToTop = () => {
     window.scrollTo({
@@ -136,7 +148,7 @@ const MarketR = () => {
     if (success) {
       setTimeout(() => {
         setSuccess(false);
-        navigate('/marketplace');
+        navigate('/explore-marketplace');
       }, 2000);
     }
     if (error) {
@@ -146,28 +158,32 @@ const MarketR = () => {
     }
   }, [error, success, navigate]);
 
+  if (loading) {
+    return <Loader />;
+  }
+
   return (
-    <div className='min-h-screen p-10 pt-0 bg-black text-purple-500 flex items-center relative flex-col'>
+    <div className='min-h-screen p-10 pt-0 bg-background text-text flex items-center relative flex-col'>
       <Authorization />
       {success || error ? (
-        <MovingGradient className='rounded-xl shadow-md mb-4 shake '>
+        <MovingGradient className='rounded-xl shadow-md mb-4 shake fixed top-10 '>
           <div className='w-64 p-4 flex items-center flex-col'>
-            <h4 className='text-md mb-2 flex flex-row items-center gap-2 font-bold text-purple-500'>
+            <h4 className='text-md mb-2 flex flex-row items-center gap-2 font-bold text-text'>
               <span>Conexus Alert!</span>
               <BadgeAlert />
             </h4>
-            <p className='break-words text-sm text-black/80 text-center'>
+            <p className='break-words text-sm text-text/80 text-center'>
               {message}
             </p>
           </div>
         </MovingGradient>
       ) : null}
 
-      <div className='max-w-lg w-full mx-auto md:rounded-2xl p-6 md:p-8 shadow-input bg-zinc-900 rounded-xl'>
-        <h2 className='font-bold text-2xl text-purple-500 dark:text-neutral-200 mb-4'>
+      <div className='max-w-lg w-full mx-auto md:rounded-2xl p-6 md:p-8 shadow-input bg-background rounded-xl'>
+        <h2 className='font-bold text-2xl text-text dark:text-neutral-200 mb-4'>
           Register Your Marketplace
         </h2>
-        <p className='text-purple-400 text-sm max-w-sm mb-6 dark:text-neutral-300'>
+        <p className='text-text text-sm max-w-sm mb-6 dark:text-neutral-300'>
           List your items in our marketplace and connect with a world of
           customers eager to find their next favorite purchase!
         </p>
@@ -176,7 +192,7 @@ const MarketR = () => {
         <form onSubmit={handleSubmit} className='space-y-6'>
           {/* Marketplace Details */}
           <section>
-            <h3 className='font-semibold text-lg text-purple-500'>
+            <h3 className='font-semibold text-lg text-text'>
               Marketplace Information
             </h3>
             <div className='bg-gradient-to-r from-transparent via-purple-300 dark:via-purple-700 to-transparent my-4 h-[1px] w-full' />
@@ -232,9 +248,7 @@ const MarketR = () => {
           <div className='bg-gradient-to-r from-transparent via-purple-300 dark:via-purple-700 to-transparent my-4 h-[1px] w-full' />
           {/* Product Information */}
           <section>
-            <h3 className='font-semibold text-lg text-purple-500'>
-              Example Product
-            </h3>
+            <h3 className='font-semibold text-lg text-text'>Example Product</h3>
             <div className='bg-gradient-to-r from-transparent via-purple-300 dark:via-purple-700 to-transparent my-4 h-[1px] w-full' />
             <div className='space-y-4'>
               <LabelInputContainer>
@@ -310,7 +324,10 @@ const MarketR = () => {
 
           {/* Register Button */}
           <div className='relative w-full'>
-            <GetStartedButton text={'Register'} className='w-full absolute' />
+            <GetStartedButton
+              text={'Register'}
+              className='w-full e bg-secondary hover:bg-primary absolute'
+            />
           </div>
         </form>
       </div>

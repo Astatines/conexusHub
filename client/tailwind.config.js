@@ -13,13 +13,12 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        purple: {
-          light: '#E5D5FF', // Replace with your desired color codes
-          DEFAULT: '#6B5B9A',
-          dark: '#4C2A6C',
-          // Add more shades as needed
-        },
-        black: '#000000', // Optional, if you want a specific black shade
+        primary: 'var(--primary-color)',
+        secondary: 'var(--secondary-color)',
+        accent: 'var(--accent-color)',
+        background: 'var(--background-color)',
+        text: 'var(--text-color)',
+        shadow: 'var(--shadow-color)',
       },
       boxShadow: {
         input: `0px 2px 3px -1px rgba(128, 0, 128, 0.1), 0px 1px 0px 0px rgba(128, 0, 128, 0.02), 0px 0px 0px 1px rgba(128, 0, 128, 0.08)`,

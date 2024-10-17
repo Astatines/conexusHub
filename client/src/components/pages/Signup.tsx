@@ -9,6 +9,7 @@ import { BadgeAlert } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Authorization from '../Authorization';
 import { Link } from 'react-router-dom';
+import Loader from '../Loader';
 
 const BACKEND_URL = 'http://localhost:3000';
 
@@ -19,6 +20,7 @@ const Signup = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
   //additional information
   const [number, setNumber] = useState('');
@@ -91,6 +93,7 @@ const Signup = () => {
     };
 
     try {
+      setLoading(true);
       const response = await axios.post(
         `${BACKEND_URL}/api/user/signup`,
         formData,
@@ -108,6 +111,8 @@ const Signup = () => {
       setMessage('Failed to Signup');
       setError(true);
       scrollToTop();
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -125,35 +130,39 @@ const Signup = () => {
     }
   }, [error, success, navigate]);
 
+  if (loading) {
+    return <Loader />;
+  }
+
   return (
-    <div className='min-h-screen p-10 pt-0 bg-black text-purple-500 flex items-center flex-col'>
+    <div className='min-h-screen p-10 pt-0 bg-background text-text flex items-center flex-col'>
       <Authorization />
       {success || error ? (
-        <MovingGradient className='rounded-xl shadow-md mb-4 shake'>
+        <MovingGradient className='rounded-xl shadow-md mb-4 shake fixed top-10'>
           <div className='w-64 p-4 flex items-center flex-col '>
-            <h4 className='text-md mb-2 flex flex-row items-center  gap-2 font-bold text-purple-500'>
+            <h4 className='text-md mb-2 flex flex-row items-center  gap-2 font-bold text-text'>
               <span>Conexus Alert!</span>
               <BadgeAlert />
             </h4>
-            <p className='break-words text-sm text-black/80 text-center'>
+            <p className='break-words text-sm text-text/80 text-center'>
               {message}
             </p>
           </div>
         </MovingGradient>
       ) : null}
 
-      <div className='max-w-lg w-full mx-auto md:rounded-2xl p-6 md:p-8 shadow-input bg-zinc-900 rounded-xl'>
-        <h2 className='font-bold text-2xl text-purple-500 dark:text-neutral-200 mb-4'>
+      <div className='max-w-lg w-full mx-auto md:rounded-2xl p-6 md:p-8 shadow-input bg-background rounded-xl'>
+        <h2 className='font-bold text-2xl text-text dark:text-neutral-200 mb-4'>
           Welcome to Conexus
         </h2>
-        <p className='text-purple-400 text-sm max-w-sm mb-6 dark:text-neutral-300'>
+        <p className='text-text text-sm max-w-sm mb-6 dark:text-neutral-300'>
           Signup now for a seamless experience with Conexus.
         </p>
         <div className='bg-gradient-to-r from-transparent via-purple-300 dark:via-purple-700 to-transparent my-4 h-[1px] w-full' />
 
         <form onSubmit={handleSubmit} className='space-y-6'>
           <section>
-            <h3 className='font-semibold text-lg text-purple-500'>
+            <h3 className='font-semibold text-lg text-text'>
               Login Information
             </h3>
             <div className='bg-gradient-to-r from-transparent via-purple-300 dark:via-purple-700 to-transparent my-4 h-[1px] w-full' />
@@ -208,9 +217,9 @@ const Signup = () => {
           <div className='bg-gradient-to-r from-transparent via-purple-300 dark:via-purple-700 to-transparent my-4 h-[1px] w-full' />
           {/* Product Information */}
           <section>
-            <h3 className='font-semibold text-lg text-purple-500'>
+            <h3 className='font-semibold text-lg text-text'>
               Additional Information{' '}
-              <span className='text-purple-700 text-sm'>Are you a robot?</span>
+              <span className='text-text text-sm'>Are you a robot?</span>
             </h3>
             <div className='bg-gradient-to-r from-transparent via-purple-300 dark:via-purple-700 to-transparent my-4 h-[1px] w-full' />
             <div className='space-y-4'>
@@ -253,14 +262,17 @@ const Signup = () => {
 
           {/* Register Button */}
           <div className='relative w-full'>
-            <GetStartedButton text={'Signup'} className='w-full absolute' />
+            <GetStartedButton
+              text={'Signup'}
+              className='w-full absolute bg-secondary hover:bg-primary'
+            />
           </div>
           <Link to='/login'>
-            <div className='text-center mt-4 text-sm text-purple-500 dark:text-neutral-200'>
+            <div className='text-center mt-4 text-sm text-text dark:text-neutral-200'>
               <p>
                 Already a Conexite? Well that's great,{' '}
                 <span
-                  className='dark:text-neutral-200 cursor-pointer text-white underline'
+                  className='dark:text-neutral-200 cursor-pointer text-accent underline '
                   onClick={() => navigate('/register')}
                 >
                   Login

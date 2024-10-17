@@ -1,6 +1,6 @@
 /// <reference types="vite/client" />
 
-export interface IUser {
+interface IUser {
   _id: string;
   userName: string;
   email: string;
@@ -15,28 +15,37 @@ export interface IUser {
   __v: number; // Optional; if you're using versioning with Mongoose
 }
 
-export interface IShop {
+interface IShop {
+  _id: string;
   shopName: string;
   estd: Date; // Establishment date
-  owner: IUser['_id']; // Reference to the user who owns the shop
+  owner: IUser; // Reference to the user who owns the shop
   location: string; // Location of the shop
-  imageURL: string; // URL for the shop's image
-  products: IProduct['_id'][]; // Array of product ObjectIds
+  shopImageURL: string; // URL for the shop's image
+  products: IProduct[]; // Array of product ObjectIds
 }
 
-export interface ICartItem {
-  product: IProduct['_id'];
+interface ICartItem {
+  product: IProduct;
   quantity: number;
 }
 
-export interface IProduct {
+interface IProduct {
+  _id: string;
   productName: string;
   productImageURL: string;
   quantity: number;
   price: number;
   unit: string;
-  shop: IShop['_id'];
+  shop: IShop;
   category: string;
 }
 
-export { IUser };
+interface ICart {
+  _id: string;
+  owner: IUser;
+  items: ICartItem[];
+  totalAmount: number;
+}
+
+export { IUser, IShop, ICartItem, IProduct, ICart };

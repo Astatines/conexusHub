@@ -13,7 +13,6 @@ export const Card = React.memo(
   ({
     card,
     index,
-
     hovered,
     setHovered,
   }: {
@@ -26,22 +25,20 @@ export const Card = React.memo(
       onMouseEnter={() => setHovered(index)}
       onMouseLeave={() => setHovered(null)}
       className={cn(
-        'rounded-lg relative bg-gray-100 dark:bg-neutral-900 overflow-hidden h-60 md:h-96 w-full transition-all duration-300 ease-out cursor-pointer ',
+        'rounded-lg relative bg-gray-100 dark:bg-neutral-900 overflow-hidden h-60 md:h-96 w-full transition-all duration-300 ease-out cursor-pointer shadow-lg transform hover:scale-105',
         hovered !== null && hovered !== index && 'blur-sm scale-[0.98]'
       )}
     >
       <img
         src={card.src}
         alt={card.title}
-        className='object-contain absolute inset-0'
+        className='object-cover absolute inset-0 h-full w-full'
       />
-      <div
-        className={cn(
-          'absolute inset-0 bg-black/50 flex items-end py-8 px-4 transition-opacity duration-300',
-          hovered === index ? 'opacity-100' : 'opacity-0'
-        )}
-      >
-        <div className='text-xl md:text-2xl font-medium bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-200'>
+      {/* Dark overlay added here */}
+      <div className='absolute inset-0 bg-black opacity-50 transition-opacity duration-300' />
+      {/* Always visible title with background */}
+      <div className='absolute inset-0 flex items-end py-4 px-4 transition-opacity duration-300'>
+        <div className='text-lg p-3 rounded-md font-semibold text-white'>
           {card.title}
         </div>
       </div>
@@ -51,26 +48,19 @@ export const Card = React.memo(
 
 Card.displayName = 'Card';
 
-type Card = {
-  title: string;
-  src: string;
-  link: string;
-};
-
-export function FocusCards({ cards }: { cards: Card[] }) {
+export function FocusCards({ cards }: { cards: CardType[] }) {
   const [hovered, setHovered] = useState<number | null>(null);
 
   return (
-    <div className='grid grid-cols-1  gap-10 max-w-5xl mx-auto md:px-8 w-full px-1 pb-10'>
+    <div className='grid grid-cols-2 max-md:grid-cols-1 gap-10 max-w-5xl mx-auto md:px-8 w-full pb-10'>
       {cards.map((card, index) => (
         <Link key={index} to={card.link}>
           <Card
-            key={index}
             card={card}
             index={index}
             hovered={hovered}
             setHovered={setHovered}
-          />{' '}
+          />
         </Link>
       ))}
     </div>
